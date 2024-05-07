@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  6 MAY 2024 17:33
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  7 MAY 2024 12:00
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1114,10 +1114,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] (./subnotes/acknowledgements.tex) [3] (./main.toc [4
 
-]
-Underfull \vbox (badness 3439) has occurred while \output is active []
-
- [5] [6] [7])
+] [5] [6] [7])
 \tf@toc=\write7
 \openout7 = `main.toc'.
 
@@ -1125,275 +1122,277 @@ Underfull \vbox (badness 3439) has occurred while \output is active []
 
 ] (./subnotes/189/189-ln01.tex
 Chapter 1.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 6.
+(c:/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [10
 
-] (./subnotes/189/189-ln02.tex
+]) [11] [12] (./subnotes/189/189-ln02.tex
 Chapter 2.
-) [11
+) [13
 
 ] (./subnotes/189/189-ln03.tex
 Chapter 3.
-) [12
+) [14
 
 ] (./subnotes/189/189-ln04.tex
 Chapter 4.
-) [13
+) [15
 
 ] (./subnotes/189/189-ln05.tex
 Chapter 5.
-) [14
+) [16
 
 ] (./subnotes/189/189-ln06.tex
 Chapter 6.
-) [15
+) [17
 
 ] (./subnotes/189/189-ln07.tex
 Chapter 7.
-) [16
+) [18
 
 ] (./subnotes/189/189-ln08.tex
 Chapter 8.
-) [17
+) [19
 
 ] (./subnotes/189/189-ln09.tex
 Chapter 9.
-) [18
+) [20
 
 ] (./subnotes/189/189-ln10.tex
 Chapter 10.
-) [19
+) [21
 
 ] (./subnotes/189/189-ln11.tex
 Chapter 11.
-) [20
+) [22
 
 ] (./subnotes/189/189-ln12.tex
 Chapter 12.
-) [21
+) [23
 
 ] (./subnotes/189/189-ln13.tex
 Chapter 13.
-) [22
+) [24
 
 ] (./subnotes/189/189-ln14.tex
 Chapter 14.
-) [23
+) [25
 
 ] (./subnotes/189/189-ln15.tex
 Chapter 15.
-) [24
+) [26
 
 ] (./subnotes/189/189-ln16.tex
 Chapter 16.
-) [25
+) [27
 
 ] (./subnotes/189/189-ln17.tex
 Chapter 17.
-) [26
+) [28
 
 ] (./subnotes/189/189-ln18.tex
 Chapter 18.
-) [27
+) [29
 
 ] (./subnotes/189/189-ln19.tex
 Chapter 19.
-) [28
+) [30
 
 ] (./subnotes/189/189-ln20.tex
 Chapter 20.
-) [29
+) [31
 
 ] (./subnotes/189/189-ln21.tex
 Chapter 21.
-) [30
+) [32
 
 ] (./subnotes/189/189-ln22.tex
 Chapter 22.
-) [31
+) [33
 
 ] (./subnotes/189/189-ln23.tex
 Chapter 23.
-) [32
+) [34
 
 ] (./subnotes/189/189-ln24.tex
 Chapter 24.
-) [33
+) [35
 
-] [34
+] [36
 
 ] (./subnotes/285/285-ln01.tex
 Chapter 25.
-) [35
+[37
 
-] (./subnotes/285/285-ln02.tex
+]) [38] (./subnotes/285/285-ln02.tex
 Chapter 26.
-) [36
 
-] (./subnotes/285/285-ln03.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [39
+
+] [40]) [41] (./subnotes/285/285-ln03.tex
 Chapter 27.
-) [37
+) [42
 
 ] (./subnotes/285/285-ln04.tex
 Chapter 28.
-) [38
+) [43
 
 ] (./subnotes/285/285-ln05.tex
 Chapter 29.
-) [39
+) [44
 
 ] (./subnotes/285/285-ln06.tex
 Chapter 30.
-) [40
+) [45
 
 ] (./subnotes/285/285-ln07.tex
 Chapter 31.
-) [41
+) [46
 
 ] (./subnotes/285/285-ln08.tex
 Chapter 32.
-) [42
+) [47
 
 ] (./subnotes/285/285-ln09.tex
 Chapter 33.
-) [43
+) [48
 
 ] (./subnotes/285/285-ln10.tex
 Chapter 34.
-) [44
+) [49
 
 ] (./subnotes/285/285-ln11.tex
 Chapter 35.
-) [45
+) [50
 
 ] (./subnotes/285/285-ln12.tex
 Chapter 36.
-) [46
+) [51
 
 ] (./subnotes/285/285-ln13.tex
 Chapter 37.
-) [47
+) [52
 
 ] (./subnotes/285/285-ln14.tex
 Chapter 38.
-) [48
+) [53
 
 ] (./subnotes/285/285-ln15.tex
 Chapter 39.
-) [49
+) [54
 
 ] (./subnotes/285/285-ln16.tex
 Chapter 40.
-) [50
+) [55
 
 ] (./subnotes/285/285-ln17.tex
 Chapter 41.
-) [51
+) [56
 
 ] (./subnotes/285/285-ln18.tex
 Chapter 42.
-) [52
+) [57
 
 ] (./subnotes/285/285-ln19.tex
 Chapter 43.
-) [53
+) [58
 
 ] (./subnotes/285/285-ln20.tex
 Chapter 44.
-) [54
+) [59
 
 ] (./subnotes/285/285-ln21.tex
 Chapter 45.
-) [55
+) [60
 
 ] (./subnotes/285/285-ln22.tex
 Chapter 46.
-) [56
+) [61
 
-] [57
+] [62
 
 ] (./subnotes/294/294-ln01.tex
 Chapter 47.
-) [58
+) [63
 
 ] (./subnotes/294/294-ln02.tex
 Chapter 48.
-) [59
+) [64
 
 ] (./subnotes/294/294-ln03.tex
 Chapter 49.
-) [60
+) [65
 
 ] (./subnotes/294/294-ln04.tex
 Chapter 50.
-) [61
+) [66
 
 ] (./subnotes/294/294-ln05.tex
 Chapter 51.
-) [62
+) [67
 
 ] (./subnotes/294/294-ln06.tex
 Chapter 52.
-) [63
+) [68
 
 ] (./subnotes/294/294-ln07.tex
 Chapter 53.
-) [64
+) [69
 
 ] (./subnotes/294/294-ln08.tex
 Chapter 54.
-) [65
+) [70
 
 ] (./subnotes/294/294-ln09.tex
 Chapter 55.
-) [66
+) [71
 
 ] (./subnotes/294/294-ln10.tex
 Chapter 56.
-) [67
+) [72
 
 ] (./subnotes/294/294-ln11.tex
 Chapter 57.
-) [68
+) [73
 
 ] (./subnotes/294/294-ln12.tex
 Chapter 58.
-) [69
+) [74
 
 ] (./subnotes/294/294-ln13.tex
 Chapter 59.
-) [70
+) [75
 
 ] (./subnotes/294/294-ln14.tex
 Chapter 60.
-) [71
+) [76
 
 ] (./subnotes/294/294-ln15.tex
 Chapter 61.
-) [72
+) [77
 
-] [73
+] [78
 
 ] (./subnotes/mubili/mubili-ln01.tex
 Chapter 62.
-) (./subnotes/revision_log.tex [74
+) (./subnotes/revision_log.tex [79
 
-]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 4.
- (c:/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)) [75
+]) [80
 
 ] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 973727EF5AE9CE61C4C1AD6BB09E2662;21793.
+(rerunfilecheck)             Checksum: F22BB77F67B6C5B08B2A28BD69F03E22;24031.
  ) 
 Here is how much of TeX's memory you used:
- 64291 strings out of 475882
- 1622935 string characters out of 5806027
- 2240641 words of memory out of 5000000
- 84239 multiletter control sequences out of 15000+600000
- 497839 words of font info for 78 fonts, out of 8000000 for 9000
+ 64284 strings out of 475882
+ 1622807 string characters out of 5806027
+ 2243944 words of memory out of 5000000
+ 84231 multiletter control sequences out of 15000+600000
+ 502799 words of font info for 81 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 114i,6n,117p,845b,1398s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 114i,9n,117p,845b,1389s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (75 pages).
+Output written on main.pdf (80 pages).

@@ -1,15 +1,90 @@
 \chapter{Supervised Learning of Behaviors}
 Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Terminology and Notation in DRL}
+In this section, we will cover several temrinologies and notations that the community uses regarding learning situations.
+
+In our paradigm, we concern an input, a system that processes the input, and the output.
+Decision-making problems consider these as respectively observations $o_t$, policy $\pi_\theta (a_t|o_t)$, and actions $a_t$.
+These symbols are subscripted by time because the context of a decision-making problem is usually a chronological sequence of events.
+Note that, the production of next observation, $o_{t+1}$, is based on the impacted state $o_t$ upon the transpiration of $a_t$.
+Note that the format of $a_t$, for example, is not limited to a vector; it can also be a continuous distribution, as we would sometimes like to sample actions to take rather than using an almost deterministic policy.
+The policy $\pi_\theta$ is parameterized by $\theta$, which is a vector of parameters that the policy uses to make decisions (that is, to provide action provided observation).
+They, therefore, assign the probability to all possible actions provided a specific state.
+
+We also introduce the notion of a state, $s_t$, which is a partial observation.
+This notion is introduced by the fact that the entirety of an environment is not always observable (and in most situations, we do not observe the entirety of an environment).
+Therefore, realistically, the policy we learn is $\pi_\theta (a_t|s_t)$, which we call a partially observed policy.
+A very appropriate analogy is perhaps our visual-neural system: our eyes guide our decisions based on what objects are posed in our environment, particularly what is in front of our eyes.
+But, we do not gain information from our eyes regarding what is behind us, simply because the environment we are situated in is partially observable: the sensors we have (eyes) simply do not detect what is behind.
+Therefore, in reinforcement learning paradigms, we work with state-action pairs rather than observation-action pairs.
+
+We develop this into what we call a Markov Decision Paradigm.
+In this paradigm, we assume that the state $s_t$ is sufficient to make decisions, and that the future state $s_{t+1}$ is independent of the past states $s_{t-1}, s_{t-2}, \ldots$ given the current state $s_t$ and the action $a_t$.
+The paradigm per se contains Markov-ness; that is, $s_t$ only depends on $s_{t-1}$, and the connection of states is only nonzero for $p(s_{t+1} | s_t, a_t)$.
+The involvement of only states and actions is a reflection of the partial observability we suffer in environments, which produces a Partially Observable Markov Decision Process (POMDP).
+
+Note: in some literature, states will be issued as $x_t$, and action $u_t$ instead, due to the involvement of background in contorl theory from some influential figures.
+
+\section{Imitation Learning}
+\textbf{Imitation learning} concerns the learning of a policy $\pi_\theta$ from a dataset of expert demonstrations.
+\textbf{Behavioral cloning}, an approach of imitation learning, is the idea that, via supervised learning, we learn a policy that regresses an underlying function $f: \mathcal{S} \rightarrow \mathcal{A}$ that maps the expert-induced states to experr-performed actions.
+These expert demonstrations are, as assumed, provided to the algorithm.
+However, behavioral cloning is usually not a good solution to general problems.
+Therefore, we expect the agent to practically clone the behavior (state-action reaction) of the expert.
+
+The reason why is because, although expert demonstrations provide us many trajectories, once we receive a state outside of the provided trajectories, the actions our agent provides are not well-defined in nature.
+It is moreso that, once the agent is exposed to an unseen state, the action it provides via its policy does not guarantee a continued cloning of the expert-demonstrated trajectory.
+This is because the nature of a trajectory destructs the i.i.d. assumption of supervised learning; that is, because of temporal dependencies, we encounter problems in behavioral cloning that does not appear in conventional supervised learning problems.
+(A spam classifier generalizes well to unseen emails, but a behavioral cloning agent does not generalize well to unseen states).
+We can propose ad-hoc solutions, such as data augmentation that increases familarity of the agent to unseen states, but these solutions are not always guaranteed to work.
+
+To make behavioral cloning work, we must make modifications to the existing paradigm.
+Let us begin with lessons of the story:
+\begin{enumerate}
+    \item Different from conventional supervised studying problems, imitation learning via behavioral cloning is not guaranteed to work.
+    \item To work against it, we can use data augmentation as well as modify data collection methods.
+    \item An exotic solution, like a multi-task learning formulation, may help to generalize to unseen states and perform good imitation learning.
+    \item The most intuitive approach is perhaps modifying the algorithm along which we do imitation learning.
+\end{enumerate}
+
+\section{Theoretical Analysis of Failure in Behavioral Cloning}
+The main culprit of behavioral cloning's failure is the dsitributional shift problem.
+Suppose that we have some policy $\pi_\theta (a_t | o_t)$ trained on a dataset of expert demonstrations.
+Here, let us say that the distribution provided by expert dataset is $p_{data}(o(t))$, but the distribution of observation the policy faces is $p_{\pi_\theta}(o_t)$.
+Note that, since our policy is trained under $p_{data} o(t)$, the objective of that training is $\max_\theta \mathbb{E}_{o_t \sim p_{data}(o(t))} \log \pi_\theta (a_t | o_t)$.
+However, the policy is evaluated under $p_{\pi_\theta}(o_t)$, which is not the same as the training distribution.
+This problem is otherwise known as \textbf{distributional shift}, and this occurs due to the policy's own deviation from the training distribution.
+
+The lesson of such problem is that we should perhaps define more precisely what we want to define as ``well-learned''.
+A policy that is good would perhaps not be a point-estimate for actions, since it can easily lead to deviations in policy behavior.
+Perhaps we may define a cost otherwise. Suppose that $\pi^*$ is the optimal policy for us to clone:
+\[
+    c(s_t, a_t) = \begin{cases}
+        0 & \text{if } a_t = \pi^* (s_t) \\
+        1 & \text{otherwise}
+    \end{cases}
+\]
+Now, then, our training objective becomes:
+\[
+    \min \mathbb{E}_{s_t \sim p_{\pi_\theta} (s_t)} [c(s_t, \pi_\theta (s_t))]
+\]
+Assume that we have an upper bound of the policy mistake, $\pi_\theta(a \neq \pi*(s) | s) \leq \epsilon$.
+Then, we observe an incurred cost of:
+\begin{align*}
+    \mathbb{E} &[\sum_t c(s_t, \pi_\theta (s_t))] \\
+    &\leq \epsilon T + (1 - \epsilon) (\epsilon (T - 1) + (1 - \epsilon) (\dots)) \in 0(\epsilon T^2)
+\end{align*}
+Therefore, the error of behavioral cloning is quadratic to the length of its trajectory ($T$).
+
+It turns out that an analysis composed by \href{https://arxiv.org/abs/1011.0686}{Ross et al. (2011)} shows that the error of behavioral cloning is quadratic to the length of the trajectory.
+That is, imitation learning is prone to failure at any timestep, and lacks a means of recovery from a policy's small failures.
+
+\section{Addressing Problem of Imitation Learning}
+To address the problem of imitation learning, we can consider the following approaches:
+\begin{enumerate}
+    \item Data Augmentation and collection
+    \item Powerful models that make very few mistakes
+    \item Multi-task learning formulation of imitation learning
+    \item Changing the algorithm of use (where we discuss DAgger)
+\end{enumerate}

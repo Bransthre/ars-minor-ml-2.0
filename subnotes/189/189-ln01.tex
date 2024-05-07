@@ -1,16 +1,84 @@
 \chapter{Fundamentals of Machine Learning}
-Chapter Description.
+In this chapter, we cover the introductory lecture of COMPSCI 189.
 
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+\textbf{Learning Goals:}
+\begin{bindenum}
+    \item Understand the fundamental workings of machine learning.
+    \item Learn about classification as an example machine learning task.
+\end{bindenum}
+
+Machine learning is a popular topic over the recent centuries.
+It is a subset of artificial intelligence that focuses on the development of algorithms that allow computers to learn from and make predictions based on data.
+The study of machine learning per se is a long journey, even disregarding the participation of research activities.
+In this section of the note, we concentrate on statistical learning, which involve fundamental techniques of machine learning that are popularized before the current pulvinar of deep learning.
+Deep learning techniques will be addressed in later sections of the entire note.
+
+\section{The Framework of Machine Learning}
+\textbf{Machine learning} is the use and development of computer systems that can learn without explicit instructions; that is, they learn a specific pattern of the provided data via statistical measures, in an autonomous and algorithmic manner.
+The learning process is largely valuable on the ability of machine learning algorithms to draw insights, or \textbf{inferences}, upon the provided training data.
+Fundamentally, statistical learning is all about finding patterns in data, and using them to make predictions. An abstraction of this will be issued in Lecture 5 of the section.
+
+Machine learning is a data-driven approach. As mentioned before, all that a machine learning can learn from is what the distribution of a provided training data provides.
+This is an important insight in the future.
+Just as how humans cannot learn what a cat is if they have never learned anything about a cat, a machine cannot learn about cat if the data we provide to its algorithm never describes what a cat is.
+In summary, what an algorithm learns is largely dependent on the data we provide to it.
+
+\section{Classification as Example Machine Learning Task}
+Classification, as you may have learned in highschool biology, is the process of categorizing things based on their properties.
+In machine learning, classification is a task that involves predicting the category of a given data point.
+For example, provided a picture that may entail a cat or a dog, a machine learning algorithm would be asked to classify it as either a cat or a dog.
+This is convenient in that humans do not have to process this judgment manually, and can instead automate this task with a fairly accurate algorithm.
+
+How do we really decide if a given data point is a cat or a dog?
+For example, suppose the datapoint I am provided is an image, how do I transform this image into a decision's label (a cat, versus a dog)?
+In classification, we usually use numbers to denote the label of a category (hereby we call it a ``class'').
+A classifier $h$, therefore, is a function that is provided a datapoint $\vec{x}$ and outputs a numeric label for the representing class:
+\[
+    h(\vec{x}) = \begin{cases}
+        1 & \text{if the algorithm considers } \vec{x} \text{ is a cat} \\
+        0 & \text{if the algorithm considers } \vec{x} \text{ is a dog}
+    \end{cases}
+\]
+The question now comes down to:
+\begin{enumerate}
+    \item $\vec{x}$: How is the colorful image we see in human eyes represented as a vector?
+    \item ``if the algorithm considers $\vec{x}$ as a something'': how is this rule implemented programatically?
+\end{enumerate}
+For question (1), the image's pixels can be converted into color-representing numeric values, then flattened into a vector based on the spatial ordering of pixels.
+For question (2), the algorithm learns a function $h$ that outputs the above mapping.
+The takeaways of above questions are as follows:
+\begin{enumerate}
+    \item The machine learning algorithm receives data in numeric form, such as a list of numbers (vectors), but not qualitatively.
+    \item The machine learning algorithm learns a function that is tailored to our need.
+\end{enumerate}
+
+\section{The Train-Validate-Test Framework}
+In machine learning, an algorithm usually follows the framework of train, validate, test.
+These aspects of the paradigm are summarized as follows.
+
+\subsection{Aspects of the T V T Framework}
+\textbf{\textit{Training a Model.}}
+Recall that any machine learning algorithm produces a function $h$, which we also call a model, by having the algorithm detect patterns in our datapoints $\vec{x}$'s.
+The act of learning an appropriate function $h$ that behaves well on our given datapoints is called \textbf{training} a model.
+That is, we are training a machine learning model on a provided dataset, and the resulting model should learn a function $h$ that accurately predicts the class label (dog vs. cat) of a given datapoint $\vec{x}$ (an image).
+In this phase, models are provided a labeled dataset; that is, a set of images that are labeled either as a cat or a dog.
+Such dataset we use to train the model is otherwise known as a \textbf{training set}.
+Usually, we continue with the training phase until the algorithm's model has reached a satisfying accuracy for the training set.
+
+\textbf{\textit{Validating a Model.}}
+We have trained a model with images of cats and dogs, and now it's time to evaluate the model.
+More precisely, it's time to evaluate the model on datapoints it has not seen yet.
+After all, when a model is deployed into the real world, it is expected for the model to be able to classify cats and dogs from pictures immediately before us, mostly unseen to anyone, rather than just known images that are already labeled in a dataset.
+The dataset that we use to validate the model, entirely unseen during the training phase, is known as the \textbf{validation set}.
+We will stay in this phase until our model has reached a satisfying accuracy for the validation set.
+
+\textbf{\textit{Testing a Model.}}
+At last, we evaluate our model again using another unseen dataset, called the \textbf{testing set}.
+The testing set is used to evaluate the model's performance on a dataset that is entirely unseen during the training and validation phases.
+This is the final phase of the train-validate-test framework, and the model's performance on the testing set is the final metric of the model's performance.
+
+\subsection{Justification: Overfitting and Underfitting}
+Hi
+
+\subsection{A Summary of Questions up to This Point}
+Hi

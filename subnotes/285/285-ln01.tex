@@ -1,15 +1,65 @@
 \chapter{Introduction to Deep Reinforcement Learning}
 Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Motivation to Reinforcement Learning}
+Let us begin a motivating problem: how can we let a robot hand pick up something?
+
+In classical robotics, the problemsolving process is to: (1) Define the problem in modeling perspectives, (2) Model the problem using mathematical equations, and (3) Solve the problem via a designed algorithm.
+However, as we accumulate technological knowledge, now we have a second option, which is to set it up as a machine learning problem.
+With the knowledge we have currently learned in statistical learning, we are inclined to use supervised learning; that is, provided some data of the robot and the environment, we train some model that can provide the robot an action to comply with.
+However, this approach is not well-informed from human experience, and the crafting of such data is still difficult.
+So, instead, we follow the line of thought of letting robots earn their own experiences via trial and error.
+This approach develops into a \textbf{reinforcement learning} setting.
+
+In a reinforcement learning seting, robots collect examples of their own behavior, and label its success (significance as well) based on a state-derived reward signal (function).
+The robot then learns to maximize the reward signal by adjusting its behavior.
+Eventually, we obtain a \textbf{policy} (a function $\pi: \mathcal{S} \rightarrow \mathcal{A}$ that provides an action in response to a seen state) that the robot can follow to pick an object up.
+
+So, reinforcement learning is really an experience-collecting framework: it allows for a freedom of trial, a disregard for a pre-existing dataset (although in most situations we will still have one), and inherits from machine learning approaches the waive of need to manually design solutions for each specific problem.
+Like statistical learning, reinforcement learning is also a massively scaled process of density estimations for underlying distributions (say, $p_\theta (x)$, or $p_\theta(y|x)$) of the training data.
+However, reinforcement learning is different in that it enables learning via agent-environment interactions, which provides a new source of information; and, it allows for new applications like evolutionary algorithms, controls, and optimizations.
+Reinforcement learning is mainly an approach for a design of behavior that does not require human intervention.
+These behavior are impressive because it is unthought of, as well as because of its delicate mimicry for human results (say, artistic outcomes).
+
+\section{Introduction to Reinforcement Learning}
+Reinforcement learning is both a mathematical ofmralism for learning-based decision making, and an approach for learning decision making and control from experience.
+
+In supervised learning, the framework follows as a provided dataset $\mathcal{D} = \{(x_i, y_i)\}$ that contributes to the learning of a function $f: \mathcal{X} \rightarrow \mathcal{Y}$, which itself is the ultimate fruit of a supervised learning paradigm.
+Recall that supervised learning makes several assumptions regarding its paradigm.
+One, the data provided to us are i.i.d. samples from an underlying distribution.
+Two, we have known ground truth outputs in training.
+
+In reinforcement learning, however, we ignore both of these assumptions.
+One, data is not i.i.d., becuase previous outputs influence future inputs (in a Markovian fashion).
+Two, ground truth answer is not known, and we are only provided a reward signal that notifies us whetehr a demonstration from the agent is successful or not.
+Reinforcement learning is therefore ran on reward-labeled data, rather than ground-truth-labeled data.
+
+To summarize the paradigm of reinforcement learning, it is comprised of the following aspects:
+\begin{enumerate}
+    \item An \textbf{agent} that interacts with the world to achieve a specific task.
+    \item An \textbf{environment} that the agent interacts with. This can be a Minecraft flat world for an agent that tries to learn walking on. This environment can be both in-real-life and simulated. In most occassions, it is simulated.
+    \item The input of learning is a \textbf{state} $s_t$ that represents the current situation of the agent.
+    \item The output of learning, generally, is a \textbf{action} $a_t$ that the agent takes in response to the state.
+    \item A \textbf{reward} $r_t$ that the agent receives after taking an action.
+    \item A \textbf{policy} $\pi$ that the agent follows to take an action.
+\end{enumerate}
+The data we receive for reinforcement learning is therefore a sequence of $(s_t, a_t, r_t)$ tuples that the agent collects from the environment as it interacts with it.
+
+\section{Motivation Towards Deep Reinforcement Learning}
+The fusion of data-driven AI and reinforcement learning provides us a complementary approach.
+In data-driven AI (deep learning), while we extract valuable inferences about the real world from data, we don't actively attempt to perform better than the data.
+Meanwhile, in reinforcement learning, while we extract emergent behavior to do better than existing data, we are not prepared with a way to extract inferences regarding the environment, and are not provided a means of using data at scale.
+That is, Data-Driven AI is about using data, while reinforcement learning is about using optimizations.
+Therefore, deep reinforcement learning is expected to excel at both learning and searching: learning from data and searching for (discovering) better ways to interact with the environment provided the data.
+
+Noted, we have deep neural network architectures that extracts inference well, and RL algorithms that are compatible with these approaches.
+However, at the current stage, learning-based control in truly real-world settings remains a major open problem.
+We will discuss these topics at lengths with later sections of the note.
+
+In the current state, we face the following open challenges:
+\begin{enumerate}
+    \item We don't yet have amazing methods that both use data and Reinforcement Learning
+    \item Humans can learn incredibly quickly, but deep RL methods are usually slow, even in simulators.
+    \item Humans can reuse past knowledge, but domain transfer is a problem to deep reinforcement learning.
+    \item The role of prediction and design of reward functions are still not very clear in reinforecment learning.
+\end{enumerate}
