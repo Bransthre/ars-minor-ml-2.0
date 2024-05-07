@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  7 MAY 2024 12:00
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  7 MAY 2024 16:03
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1232,167 +1232,167 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [39
 
-] [40]) [41] (./subnotes/285/285-ln03.tex
+] [40]) [41] [42] (./subnotes/285/285-ln03.tex
 Chapter 27.
-) [42
+) [43
 
 ] (./subnotes/285/285-ln04.tex
 Chapter 28.
-) [43
+) [44
 
 ] (./subnotes/285/285-ln05.tex
 Chapter 29.
-) [44
+) [45
 
 ] (./subnotes/285/285-ln06.tex
 Chapter 30.
-) [45
+) [46
 
 ] (./subnotes/285/285-ln07.tex
 Chapter 31.
-) [46
+) [47
 
 ] (./subnotes/285/285-ln08.tex
 Chapter 32.
-) [47
+) [48
 
 ] (./subnotes/285/285-ln09.tex
 Chapter 33.
-) [48
+) [49
 
 ] (./subnotes/285/285-ln10.tex
 Chapter 34.
-) [49
+) [50
 
 ] (./subnotes/285/285-ln11.tex
 Chapter 35.
-) [50
+) [51
 
 ] (./subnotes/285/285-ln12.tex
 Chapter 36.
-) [51
+) [52
 
 ] (./subnotes/285/285-ln13.tex
 Chapter 37.
-) [52
+) [53
 
 ] (./subnotes/285/285-ln14.tex
 Chapter 38.
-) [53
+) [54
 
 ] (./subnotes/285/285-ln15.tex
 Chapter 39.
-) [54
+) [55
 
 ] (./subnotes/285/285-ln16.tex
 Chapter 40.
-) [55
+) [56
 
 ] (./subnotes/285/285-ln17.tex
 Chapter 41.
-) [56
+) [57
 
 ] (./subnotes/285/285-ln18.tex
 Chapter 42.
-) [57
+) [58
 
 ] (./subnotes/285/285-ln19.tex
 Chapter 43.
-) [58
+) [59
 
 ] (./subnotes/285/285-ln20.tex
 Chapter 44.
-) [59
+) [60
 
 ] (./subnotes/285/285-ln21.tex
 Chapter 45.
-) [60
+) [61
 
 ] (./subnotes/285/285-ln22.tex
 Chapter 46.
-) [61
+) [62
 
-] [62
+] [63
 
 ] (./subnotes/294/294-ln01.tex
 Chapter 47.
-) [63
+) [64
 
 ] (./subnotes/294/294-ln02.tex
 Chapter 48.
-) [64
+) [65
 
 ] (./subnotes/294/294-ln03.tex
 Chapter 49.
-) [65
+) [66
 
 ] (./subnotes/294/294-ln04.tex
 Chapter 50.
-) [66
+) [67
 
 ] (./subnotes/294/294-ln05.tex
 Chapter 51.
-) [67
+) [68
 
 ] (./subnotes/294/294-ln06.tex
 Chapter 52.
-) [68
+) [69
 
 ] (./subnotes/294/294-ln07.tex
 Chapter 53.
-) [69
+) [70
 
 ] (./subnotes/294/294-ln08.tex
 Chapter 54.
-) [70
+) [71
 
 ] (./subnotes/294/294-ln09.tex
 Chapter 55.
-) [71
+) [72
 
 ] (./subnotes/294/294-ln10.tex
 Chapter 56.
-) [72
+) [73
 
 ] (./subnotes/294/294-ln11.tex
 Chapter 57.
-) [73
+) [74
 
 ] (./subnotes/294/294-ln12.tex
 Chapter 58.
-) [74
+) [75
 
 ] (./subnotes/294/294-ln13.tex
 Chapter 59.
-) [75
+) [76
 
 ] (./subnotes/294/294-ln14.tex
 Chapter 60.
-) [76
+) [77
 
 ] (./subnotes/294/294-ln15.tex
 Chapter 61.
-) [77
+) [78
 
-] [78
+] [79
 
 ] (./subnotes/mubili/mubili-ln01.tex
 Chapter 62.
-) (./subnotes/revision_log.tex [79
+) (./subnotes/revision_log.tex [80
 
-]) [80
+]) [81
 
 ] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: F22BB77F67B6C5B08B2A28BD69F03E22;24031.
+(rerunfilecheck)             Checksum: 661E2229F536C370B5BC43F353EF3FB5;24341.
  ) 
 Here is how much of TeX's memory you used:
  64284 strings out of 475882
  1622807 string characters out of 5806027
- 2243944 words of memory out of 5000000
+ 2245263 words of memory out of 5000000
  84231 multiletter control sequences out of 15000+600000
  502799 words of font info for 81 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  114i,9n,117p,845b,1389s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (80 pages).
+Output written on main.pdf (81 pages).

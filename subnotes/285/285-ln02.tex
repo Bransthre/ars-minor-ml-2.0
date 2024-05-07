@@ -88,3 +88,43 @@ To address the problem of imitation learning, we can consider the following appr
     \item Multi-task learning formulation of imitation learning
     \item Changing the algorithm of use (where we discuss DAgger)
 \end{enumerate}
+
+\textbf{\textit{Data Augmentation and Collection.}}
+Behavioral cloning is difficult because the model doesn't generalize well to mistakes.
+What is we involve data regarding mistakes instead? If the dataset involves mistakes, due to additional steps in data collection and augmentation process, although the training set will be diluted, we can now access corrections in our BC paradigm.
+
+\textbf{\textit{Powerful Models.}}
+Failures from fitting the expert can stem from several reasons.
+First, the expert's behavior is non-Markovian. While the policy we train is Markovian-ly conditioned, the expert's behavior are not formulated on a Markovian approach. That is, provided exposure to states $s_t = s_{t'}$, it is likely that the action elicited from these states are different.
+Therefore, human demonstrators post a very unnatural circumstance for a Markovian policy.
+Perhaps one remedy is to use the entire history of a trajectory, and a sequence model is capable of processing it as a temporal sequence of frames.
+However, the exploitation of entire history may still work poorly, simply because including the history may still be harmed by incomplete information, which can lead to causal confusion.
+Second, the expert's behavior may be multimodal. That is, the expert may have multiple ways of solving a problem, and the policy we train may not be able to capture all of these modes.
+This is specifically unhelpful for a continuous distribution of actions, which rely on the use of mean and variance that is difficultly characterizing for bimodal distributions.
+Although we can instead choose expressive continuous distributions for actions (namely, use other classes of distributions), or use an autoregressive discretization with high-dimensional action spaces, they do pose higher computational costs to this procedure.
+
+\textbf{\textit{Multi-task Learning Formulation.}}
+Training a policy that has one sole destination of trajectory can be difficult, but perhaps a multi-task learning formulation that attempts to let policies reach multiple different destinations.
+This approach can be summarized as ``goal-conditioned behavioral cloning'', which can provide more opportunities to learn corrections despite distributional shift; that is, to maximize $\log \pi_\theta (a_t^i | s_t^i, g = s_T^i)$.
+However, this approach actually introduces a secondary source for distributional shift, making the approach theoretically worse.
+
+\textbf{\textit{Changing the Algorithm of Use: DAgger.}}
+The idea of DAgger, Dataset Aggregation, is to make $p_{data}(o_t) = p_{\pi_\theta}(o_t)$.
+That is, we collect training data from $p_{\pi_\theta}(o_t)$ by running the policy $\pi_\theta (a_t | o_t)$ in the environment.
+Then, we aggregate the dataset of expert demonstrations and the dataset of the policy's own data, and train the policy on the aggregated dataset.
+The algorithm is as follows:
+\begin{enumerate}
+    \item Collect a dataset of expert demonstrations $\mathcal{D} = {\{(o_t^i, a_t^i)\}}_{i=1}^N$.
+    \item For $k = 1, 2, \ldots, K$:
+    \begin{enumerate}
+        \item Train the policy $\pi_\theta$ on $\mathcal{D}$.
+        \item Collect a dataset of the policy's own data $\mathcal{D}_{\pi_\theta} ={ \{(o_t^i, \pi_\theta (o_t^i))\}}_{i=1}^N$.
+        \item Aggregate the datasets $\mathcal{D} \leftarrow \mathcal{D} \cup \mathcal{D}_{\pi_\theta}$.
+    \end{enumerate}
+\end{enumerate}
+
+\section{A Hint at the Need of Reward and Cost Signals}
+Deep learning works best when data is plentiful, but humans are finite sources of data (that is, humans cannot provide all data and label all data).
+Therefore, to resolve the disruptive demand of large ground truths, we expect our reinforcement learning algorithm to learn autonomously.
+To enable algorithms to evaluate their experiences, and exceeding their own performances, we offer a reward signal called \textbf{reward function}, $r(s, a)$, which provides a numeric evaluation for an observed pair of state and action.
+For example, for imitation learning, we can propose the reward function $r(s, a) = \log p(a = \pi^*(s) | s)$.

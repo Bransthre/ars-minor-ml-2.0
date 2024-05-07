@@ -67,77 +67,78 @@
 \contentsline {section}{\numberline {26.2}Imitation Learning}{40}{section.26.2}%
 \contentsline {section}{\numberline {26.3}Theoretical Analysis of Failure in Behavioral Cloning}{40}{section.26.3}%
 \contentsline {section}{\numberline {26.4}Addressing Problem of Imitation Learning}{41}{section.26.4}%
-\contentsline {chapter}{\numberline {27}Introduction to Reinforcement Learning}{42}{chapter.27}%
-\contentsline {section}{\numberline {27.1}section title}{42}{section.27.1}%
-\contentsline {chapter}{\numberline {28}Policy Gradients}{43}{chapter.28}%
-\contentsline {section}{\numberline {28.1}section title}{43}{section.28.1}%
-\contentsline {chapter}{\numberline {29}Actor-Critic Algorithms}{44}{chapter.29}%
-\contentsline {section}{\numberline {29.1}section title}{44}{section.29.1}%
-\contentsline {chapter}{\numberline {30}Value Function Methods}{45}{chapter.30}%
-\contentsline {section}{\numberline {30.1}section title}{45}{section.30.1}%
-\contentsline {chapter}{\numberline {31}Deep RL with Q-Functions}{46}{chapter.31}%
-\contentsline {section}{\numberline {31.1}section title}{46}{section.31.1}%
-\contentsline {chapter}{\numberline {32}Advanced Policy Gradients}{47}{chapter.32}%
-\contentsline {section}{\numberline {32.1}section title}{47}{section.32.1}%
-\contentsline {chapter}{\numberline {33}Optimal Control and Planning}{48}{chapter.33}%
-\contentsline {section}{\numberline {33.1}section title}{48}{section.33.1}%
-\contentsline {chapter}{\numberline {34}Model-Based Reinforcement Learning}{49}{chapter.34}%
-\contentsline {section}{\numberline {34.1}section title}{49}{section.34.1}%
-\contentsline {chapter}{\numberline {35}Model-Based Policy Learning}{50}{chapter.35}%
-\contentsline {section}{\numberline {35.1}section title}{50}{section.35.1}%
-\contentsline {chapter}{\numberline {36}Exploration (Part 1)}{51}{chapter.36}%
-\contentsline {section}{\numberline {36.1}section title}{51}{section.36.1}%
-\contentsline {chapter}{\numberline {37}Exploration (Part 2)}{52}{chapter.37}%
-\contentsline {section}{\numberline {37.1}section title}{52}{section.37.1}%
-\contentsline {chapter}{\numberline {38}Offline Reinforcement Learning (Part 1)}{53}{chapter.38}%
-\contentsline {section}{\numberline {38.1}section title}{53}{section.38.1}%
-\contentsline {chapter}{\numberline {39}Offline Reinforcement Learning (Part 2)}{54}{chapter.39}%
-\contentsline {section}{\numberline {39.1}section title}{54}{section.39.1}%
-\contentsline {chapter}{\numberline {40}Reinforcement Learning Theory}{55}{chapter.40}%
-\contentsline {section}{\numberline {40.1}section title}{55}{section.40.1}%
-\contentsline {chapter}{\numberline {41}Variational Inference and Generative Models}{56}{chapter.41}%
-\contentsline {section}{\numberline {41.1}section title}{56}{section.41.1}%
-\contentsline {chapter}{\numberline {42}Connection between Inference and Control}{57}{chapter.42}%
-\contentsline {section}{\numberline {42.1}section title}{57}{section.42.1}%
-\contentsline {chapter}{\numberline {43}Inverse Reinforcement Learning}{58}{chapter.43}%
-\contentsline {section}{\numberline {43.1}section title}{58}{section.43.1}%
-\contentsline {chapter}{\numberline {44}Reinforcement Learning with Sequence Models}{59}{chapter.44}%
-\contentsline {section}{\numberline {44.1}section title}{59}{section.44.1}%
-\contentsline {chapter}{\numberline {45}Meta-Learning and Transfer Learning}{60}{chapter.45}%
-\contentsline {section}{\numberline {45.1}section title}{60}{section.45.1}%
-\contentsline {chapter}{\numberline {46}Challenges and Open Problems}{61}{chapter.46}%
-\contentsline {section}{\numberline {46.1}section title}{61}{section.46.1}%
-\contentsline {part}{III\hspace {1em}COMPSCI 294-158: Deep Unsupervised Learning}{62}{part.3}%
-\contentsline {chapter}{\numberline {47}Introduction to Deep Unsupervised Learning}{63}{chapter.47}%
-\contentsline {section}{\numberline {47.1}section title}{63}{section.47.1}%
-\contentsline {chapter}{\numberline {48}Autoregressive Models}{64}{chapter.48}%
-\contentsline {section}{\numberline {48.1}section title}{64}{section.48.1}%
-\contentsline {chapter}{\numberline {49}Flow Models}{65}{chapter.49}%
-\contentsline {section}{\numberline {49.1}section title}{65}{section.49.1}%
-\contentsline {chapter}{\numberline {50}Latent Variable Models}{66}{chapter.50}%
-\contentsline {section}{\numberline {50.1}section title}{66}{section.50.1}%
-\contentsline {chapter}{\numberline {51}GAN and Implicit Models}{67}{chapter.51}%
-\contentsline {section}{\numberline {51.1}section title}{67}{section.51.1}%
-\contentsline {chapter}{\numberline {52}Diffusion Models}{68}{chapter.52}%
-\contentsline {section}{\numberline {52.1}section title}{68}{section.52.1}%
-\contentsline {chapter}{\numberline {53}Self-Supervised Learning, Non-Generative Representation Learning}{69}{chapter.53}%
-\contentsline {section}{\numberline {53.1}section title}{69}{section.53.1}%
-\contentsline {chapter}{\numberline {54}Leage Language Models}{70}{chapter.54}%
-\contentsline {section}{\numberline {54.1}section title}{70}{section.54.1}%
-\contentsline {chapter}{\numberline {55}Video Generation}{71}{chapter.55}%
-\contentsline {section}{\numberline {55.1}section title}{71}{section.55.1}%
-\contentsline {chapter}{\numberline {56}Semi-Supervised Learning and Unsupervised Distribution Alignment}{72}{chapter.56}%
-\contentsline {section}{\numberline {56.1}section title}{72}{section.56.1}%
-\contentsline {chapter}{\numberline {57}Compression}{73}{chapter.57}%
-\contentsline {section}{\numberline {57.1}section title}{73}{section.57.1}%
-\contentsline {chapter}{\numberline {58}Multimodal Models}{74}{chapter.58}%
-\contentsline {section}{\numberline {58.1}section title}{74}{section.58.1}%
-\contentsline {chapter}{\numberline {59}Parallelization}{75}{chapter.59}%
-\contentsline {section}{\numberline {59.1}section title}{75}{section.59.1}%
-\contentsline {chapter}{\numberline {60}AI for Science (Gues Instructor)}{76}{chapter.60}%
-\contentsline {section}{\numberline {60.1}section title}{76}{section.60.1}%
-\contentsline {chapter}{\numberline {61}Neural Radiance Fields (Guest Instructor)}{77}{chapter.61}%
-\contentsline {section}{\numberline {61.1}section title}{77}{section.61.1}%
-\contentsline {part}{IV\hspace {1em}Mu Li's Videos on YouTube}{78}{part.4}%
-\contentsline {chapter}{\numberline {62}Note Name}{79}{chapter.62}%
-\contentsline {section}{\numberline {62.1}section title}{79}{section.62.1}%
+\contentsline {section}{\numberline {26.5}A Hint at the Need of Reward and Cost Signals}{42}{section.26.5}%
+\contentsline {chapter}{\numberline {27}Introduction to Reinforcement Learning}{43}{chapter.27}%
+\contentsline {section}{\numberline {27.1}section title}{43}{section.27.1}%
+\contentsline {chapter}{\numberline {28}Policy Gradients}{44}{chapter.28}%
+\contentsline {section}{\numberline {28.1}section title}{44}{section.28.1}%
+\contentsline {chapter}{\numberline {29}Actor-Critic Algorithms}{45}{chapter.29}%
+\contentsline {section}{\numberline {29.1}section title}{45}{section.29.1}%
+\contentsline {chapter}{\numberline {30}Value Function Methods}{46}{chapter.30}%
+\contentsline {section}{\numberline {30.1}section title}{46}{section.30.1}%
+\contentsline {chapter}{\numberline {31}Deep RL with Q-Functions}{47}{chapter.31}%
+\contentsline {section}{\numberline {31.1}section title}{47}{section.31.1}%
+\contentsline {chapter}{\numberline {32}Advanced Policy Gradients}{48}{chapter.32}%
+\contentsline {section}{\numberline {32.1}section title}{48}{section.32.1}%
+\contentsline {chapter}{\numberline {33}Optimal Control and Planning}{49}{chapter.33}%
+\contentsline {section}{\numberline {33.1}section title}{49}{section.33.1}%
+\contentsline {chapter}{\numberline {34}Model-Based Reinforcement Learning}{50}{chapter.34}%
+\contentsline {section}{\numberline {34.1}section title}{50}{section.34.1}%
+\contentsline {chapter}{\numberline {35}Model-Based Policy Learning}{51}{chapter.35}%
+\contentsline {section}{\numberline {35.1}section title}{51}{section.35.1}%
+\contentsline {chapter}{\numberline {36}Exploration (Part 1)}{52}{chapter.36}%
+\contentsline {section}{\numberline {36.1}section title}{52}{section.36.1}%
+\contentsline {chapter}{\numberline {37}Exploration (Part 2)}{53}{chapter.37}%
+\contentsline {section}{\numberline {37.1}section title}{53}{section.37.1}%
+\contentsline {chapter}{\numberline {38}Offline Reinforcement Learning (Part 1)}{54}{chapter.38}%
+\contentsline {section}{\numberline {38.1}section title}{54}{section.38.1}%
+\contentsline {chapter}{\numberline {39}Offline Reinforcement Learning (Part 2)}{55}{chapter.39}%
+\contentsline {section}{\numberline {39.1}section title}{55}{section.39.1}%
+\contentsline {chapter}{\numberline {40}Reinforcement Learning Theory}{56}{chapter.40}%
+\contentsline {section}{\numberline {40.1}section title}{56}{section.40.1}%
+\contentsline {chapter}{\numberline {41}Variational Inference and Generative Models}{57}{chapter.41}%
+\contentsline {section}{\numberline {41.1}section title}{57}{section.41.1}%
+\contentsline {chapter}{\numberline {42}Connection between Inference and Control}{58}{chapter.42}%
+\contentsline {section}{\numberline {42.1}section title}{58}{section.42.1}%
+\contentsline {chapter}{\numberline {43}Inverse Reinforcement Learning}{59}{chapter.43}%
+\contentsline {section}{\numberline {43.1}section title}{59}{section.43.1}%
+\contentsline {chapter}{\numberline {44}Reinforcement Learning with Sequence Models}{60}{chapter.44}%
+\contentsline {section}{\numberline {44.1}section title}{60}{section.44.1}%
+\contentsline {chapter}{\numberline {45}Meta-Learning and Transfer Learning}{61}{chapter.45}%
+\contentsline {section}{\numberline {45.1}section title}{61}{section.45.1}%
+\contentsline {chapter}{\numberline {46}Challenges and Open Problems}{62}{chapter.46}%
+\contentsline {section}{\numberline {46.1}section title}{62}{section.46.1}%
+\contentsline {part}{III\hspace {1em}COMPSCI 294-158: Deep Unsupervised Learning}{63}{part.3}%
+\contentsline {chapter}{\numberline {47}Introduction to Deep Unsupervised Learning}{64}{chapter.47}%
+\contentsline {section}{\numberline {47.1}section title}{64}{section.47.1}%
+\contentsline {chapter}{\numberline {48}Autoregressive Models}{65}{chapter.48}%
+\contentsline {section}{\numberline {48.1}section title}{65}{section.48.1}%
+\contentsline {chapter}{\numberline {49}Flow Models}{66}{chapter.49}%
+\contentsline {section}{\numberline {49.1}section title}{66}{section.49.1}%
+\contentsline {chapter}{\numberline {50}Latent Variable Models}{67}{chapter.50}%
+\contentsline {section}{\numberline {50.1}section title}{67}{section.50.1}%
+\contentsline {chapter}{\numberline {51}GAN and Implicit Models}{68}{chapter.51}%
+\contentsline {section}{\numberline {51.1}section title}{68}{section.51.1}%
+\contentsline {chapter}{\numberline {52}Diffusion Models}{69}{chapter.52}%
+\contentsline {section}{\numberline {52.1}section title}{69}{section.52.1}%
+\contentsline {chapter}{\numberline {53}Self-Supervised Learning, Non-Generative Representation Learning}{70}{chapter.53}%
+\contentsline {section}{\numberline {53.1}section title}{70}{section.53.1}%
+\contentsline {chapter}{\numberline {54}Leage Language Models}{71}{chapter.54}%
+\contentsline {section}{\numberline {54.1}section title}{71}{section.54.1}%
+\contentsline {chapter}{\numberline {55}Video Generation}{72}{chapter.55}%
+\contentsline {section}{\numberline {55.1}section title}{72}{section.55.1}%
+\contentsline {chapter}{\numberline {56}Semi-Supervised Learning and Unsupervised Distribution Alignment}{73}{chapter.56}%
+\contentsline {section}{\numberline {56.1}section title}{73}{section.56.1}%
+\contentsline {chapter}{\numberline {57}Compression}{74}{chapter.57}%
+\contentsline {section}{\numberline {57.1}section title}{74}{section.57.1}%
+\contentsline {chapter}{\numberline {58}Multimodal Models}{75}{chapter.58}%
+\contentsline {section}{\numberline {58.1}section title}{75}{section.58.1}%
+\contentsline {chapter}{\numberline {59}Parallelization}{76}{chapter.59}%
+\contentsline {section}{\numberline {59.1}section title}{76}{section.59.1}%
+\contentsline {chapter}{\numberline {60}AI for Science (Gues Instructor)}{77}{chapter.60}%
+\contentsline {section}{\numberline {60.1}section title}{77}{section.60.1}%
+\contentsline {chapter}{\numberline {61}Neural Radiance Fields (Guest Instructor)}{78}{chapter.61}%
+\contentsline {section}{\numberline {61.1}section title}{78}{section.61.1}%
+\contentsline {part}{IV\hspace {1em}Mu Li's Videos on YouTube}{79}{part.4}%
+\contentsline {chapter}{\numberline {62}Note Name}{80}{chapter.62}%
+\contentsline {section}{\numberline {62.1}section title}{80}{section.62.1}%
