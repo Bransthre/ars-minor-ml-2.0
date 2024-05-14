@@ -1,15 +1,158 @@
 \chapter{Autoregressive Models}
-Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+The problems we'd like to solve with likelihood-based models involve (1) data generation, where we synthesize image, videos, speech, text; (2) data compression, where we construct efficient codes; (3) anomaly detection, where we detect out-of-distribution data.
+The way in which likelihood-based models resolve such problem is by estimating a distribution $p_{data}$ from samples $x_1, \dots, x_n \sim p_{data}(x)$.
+That is to say, likelihood-based models learn a distribution $p$ that allows the computation of $p(x)$ for an arbitrary datapoint $x$, and sampling $x \sim p(x)$ from the learned distribution $p$.
+
+The desiderata of our model is an estimated distribution of complex, high-dimensional data, such as a high-resolution image.
+On the other hand, we also want computational and statistical efficiency, across operations of training, generalization, sampling quality, and compression rate.
+
+\section{1-Dimensional Distributions}
+An easy model that can fit a one-dimensional distribution is a histogram.
+Suppose that the samples, $x_1, \dots, x_n$, take on values in a finite set of natural numbers, $\{1, \dots, k\}$.
+A model, like a histogram, effectively counts the amount of datapoint in each bin of natural numbers, and is therefore described by $k$ nonnegative numbers that describe the frequency of each numbers.
+The ``training'' process of such model is merely counting the frequency of each number in the dataset.
+The inference step of such model, which is to query $p_i$ for an arbitrary $i$, is simply a lookup into the array $p_1, \dots, p_k$.
+On the other hand, the sampling step of the model can be performed via inverse transform sampling, which is to first come up with an empirical CDF $F$, then draw a uniform random number $u \in [0, 1]$ and return $i^* = \min_i \{u \leq F(i)\}$.
+
+However, a histogram lacks generalization. Although our learned histogram describes the training data distribution well, it often has poor generalization onto non-training data.
+The solution towards such problems is to learn a parametrized distribution, which often generalizes better.
+In such context, we introduce some parametrized model $p_\theta(x)$ such that $p_\theta$ is close to $p_{data}$.
+To learn $\theta$, we can pose an optimization problem over possible values of it:
+\[
+    \theta^* = \arg \min_\theta L(\theta, x_1, \dots, x_n)
+\]
+Such optimization problem must be able to:
+\begin{bindenum}
+    \item Work with large datasets
+    \item Yield a $\theta$ that solves the optimization problem
+    \item Note that the training procedure can only see the empirical distribution, but need to generalize towards unseen datapoint.
+\end{bindenum}
+
+An instant solution of such approach would be maximum likelihood, where:
+\[
+    \hat{\theta}_{MLE} = \arg \min_\theta \frac{1}{n} \sum_{i=1}^n -\log p_\theta (x_i)
+\]
+which is equivalent to minimizing KL divergence between the empirical data distribution and the model:
+\[
+    KL(\hat{p}_{data} || p_\theta) = \mathbb{E}_{x \sim \hat{p}_{data}} \left[-\log p_\theta (x)\right] - H(\hat{p}_{data})
+\]
+Its combination with stochastic gradient descent works with large dataset and is compatible with neural networks, and is thus a popular choice with respect to use of MLE.
+
+\section{High-Dimensional Distributions}
+High-dimensional data are difficult to work with, because it has a large space of possible values.
+Even upon flattening (such that we reduce the problem of fitting high-dimensional distributions into fitting a one-dimensional distribution), as each image influences only one parameter (despite having a large amount of values), it doesn't provide a feasible range and also does not allow for generalization.
+
+However, by paying attention to the fact that any multi-variable distribution can be written as a product of conditionals:
+\[
+    p_\theta (x) = \prod_{i=1}^d p_\theta (x_i | x_{1:i-1})
+\]
+we can build a class of models called ``autoregressive model'', which relies on a sequence of existing datapoint.
+This allows us to fit a chain of one-dimensional distributions, but as it is conditioned on high-dimensional things, we need to think further on how to efficiently represent and learn each conditional distribution.
+
+Here, four families of autoregressive solutions are presented in the following subsections.
+
+\textbf{\textit{Bayes' Nets.}}
+This model sparsifies the conditioning by writing the chain rule as:
+\[
+    p_\theta (x) = \prod_{i=1}^d p_\theta (x_i | Parents(x_i))
+\]
+where $Parents(x_i)$ is a subset of the previous variables, and we define the relationship of variables as a directed graph of variables that are related to each other if directly connected by an edge.
+Then, ``parent'' acquires a graph-based meaning.
+If the data has such underlying causal structure, then this architecture can provide great inductive bias.
+However, the sparsification of variable relationship imposes strong assumptions on inter-variable relationship, which limits the expressiveness of such model.
+Furthermore, in standard form, there is a limited parameter sharing between conditional distributions.
+
+\textbf{\textit{MADE.}}
+In MADE (Masked Autoencoder for Distribution Estimation), our approach is to paraetrize conditional distributions using neural networks.
+This approach proceeds as a process of defining relationship between data via the use of inter-node connections.
+This model uses a left-to-right causal structure where each hidden layer node can be vector-valued, and each edge can be its own MLP connection.
+Furthermore, the model uses a masking strategy to ensure that each node can only depend on previous nodes, as well as covering inter-node connections that should not occur.
+However, the model is limited by finite parameter sharing, which limits its learning efficiency as well.
+
+\textbf{\textit{Causal Masked Neural Models.}}
+In this model, we parametrize conditional distributions wiht a neural network as well, but we have parameter-sharing mechanisms across conditional distributions, and also add coordinating coding to individualize conditional distributions.
+In this model, an output is synthesized one sample at a time via taking an input raw signal.
+Such manner invovles several updates from MADE:
+\begin{bindenum}
+    \item Every hidden layer node can be vector-valued
+    \item Same parameters when shifting from column $i$ to $i + 1$
+    \item Adds coordinate coding to retain positional information across a sequence.
+    \item Full uniformization via padding.
+\end{bindenum}
+One application of these philosophies was WaveNet, which included the receptive field via dilated convolution with exponential dilation.
+It also allows for better expressivity, using gated residual blocks and skip connections.
+
+\textbf{\textit{Recurrent Neural Network}}
+This model is characterized by its parameter sharing mechanism and infinite look-back opportunities.
+In an RNN, the probability of a sequence is given by: $p_\theta (x) = \prod_{i=1}^d p_\theta (x_i | x_{1:i-1})$.
+That is, $\log p(x) = \sum_{i=1}^d \log p(x_i | x_{1:i-1})$.
+Although the lookback is theoretically infinite, in practice, the lookback is limited by the capacity of the RNN.
+This is quite an expressive model, but in practice, it is not as amenable to parallelization due to dependence of past information, and cannot really propagate signals from long history.
+Back propagation through time can also having exploding or vanishing gradients.
+Note that, an RNN is in fact a very deep vausal masked model with very sparse connectivity, which uses the main diagonal to synthesize data, and therefore is also limited in expressiveness when compared to Causal Masked Model.
+
+\section{Deeper Dive into Causal Masked Neural Models}
+
+\subsection{Convolutional}
+In PixelCNN, people have proposed a masked spatial convolution spanning on 2D images.
+This is a masked variant of CNN, which first imposes an autoregressive ordering on 2D images.
+Upon that, we must design some masking method to obey our proposed ordering.
+In this method, we use softmax sampling on all pixels, but the masking technique used leads to a blind spot in the receptive field that we cannot condition current outputs on.
+This is a limitation of the model, as it cannot condition on the entire receptive field.
+
+\subsection{Attention}
+A recurring problem for convolution was the limited receptive field, which leads to difficulties in capturing long-range dependencies.
+An alternative of such method would be self-attention, which provides for an unlimited recpetive field, a constant-time parameter scaling with respect to data dimension, and a parallelized computation (while RNN is not parallelized).
+Specifically, attention mechanisms are formalized as scaled dot products:
+\[
+    A(q, K, V) = \sum_i \frac{\exp (s(q, k_i))}{\sum_j \exp (s(q, k_j))} v_i, s(q, k) = \frac{qk}{\sqrt{d}}
+\]
+Such that $A(Q, K, V) = {\rm softmax}(QK^T)V$.
+Then, a masked attention would be a self-attention mechanism that makes all non-wanted elements very negative values. Let $M$ resemble the binary mask, then a masked attention presents itself as:
+\[
+    A(Q, K, V) = {\rm softmax}(QK^T - (1 - M) \times 10^{10})
+\]
+The flexibility of such softmax mechanism also provides us flexibility in the composition of $M$.
+
+This self-attention mechanism is used in Transformer Blocks, which involve a Multi-Head Self-Attention (MHSA) and an MLP.
+Collectively,
+\begin{align*}
+    h &= h + {\rm MHSA}({\rm LayerNorm}(h)) \\
+    h *= h + {\rm MLP}({\rm LayerNorm}(h))
+\end{align*}
+
+\subsection{Tokenization}
+Autoregressive transformers are general-purpose, modality-agnostic models that can model any complex distribution as long as the data is tokenizable.
+To tokenize a data is to make a discrete, such that softmax operations are feasible. The means of tokenization for each modality are slightly different from each other.
+
+\textbf{\textit{Tokenization in Language.}}
+For instance, tokenizing a sentence into words is a difficult task for the non-finite-ness of vocabularies and high possibilities of seeing out-of-distribution vocabularies.
+A Byte-Pair Encoding (BPE) is a method that tokenizes the sentence by groupings of characters instead, and prioritizing them by frequency, which also enables bag-of-words encoding.
+Then, we have 1 to 2 tokens per word, and can therefore generalize to novel combinations of characters. Although, mappings are language-specific.
+GPT models are examplar of such tokenization method.
+This model uses unsupervised pre-training followed by supervised fine-tuning, and is a 100M parameter transformer model.
+Finetuning a model pretrained on general language ends up outperforming models designed for each task, showcasing the generalizability of GPT-1.
+
+\textbf{\textit{Tokenizaiton in Images.}}
+We may consider each RGB encoding as a token, but this introduces too many tokens per image (particularly, this leads to quadratic scaling of attention).
+Therefore, we would instead use a sparse transformer, which trains a causal transformer via special hard-coded masking structures.
+The sparse masks are designed such that these causal masks can be performed with lower-than-quadratic scaling via hardware engineering, at the sacrifice of some pairwise interactions.
+This produces a SoTA on perplexity of images, but the sample quality is still low.
+Meanwhile, a model called iGPT creates a custom 9-bit color palette by clustering RGB pixel values with k-means clustering.
+This approach is more concerned with representational learning, and finds a strong 3-times reduction in sequence length from the original 24-bit color palette.
+Finally, a popular approach now is to use a discrete autoencoder, which can compress an image into a smaller image discretely encoded and upsampled by the decoder.
+This method of tokenization is lossy, provides very strong compression and reduction from its approach.
+Then, the tokenization of video is processed in training of a large autoregressive transformer on sequential visual data.
+
+\subsection{Caching}
+The most naive method of sampling would perhaps be, provided datapoints $x_1$ and $x_2$, we compute keys and values for such tokens, feeding it down attention layers, then obtain $x_3$ from softmax and attention.
+This process continues throughout $x_4, x_5, \dots, x_T$.
+However, this also requires computation of all keys and values from prior timestep, which is why caching these key-value queries per sampling step would be helpful in the described situation.
+
+\section{Other Miscellaneous Topics}
+\subsection{Decoder-only vs. Encoder-Decoder Models}
+An encoder-decoder model involves another encoder (which is a transformer) that is bidirectional, encodes all inputs, and makes the decoder become conditioned on the encoder via information-sharing mechanisms (in this case cross-attention mechanism).
+This is a good archtiecture choice for clear conditional distribution to model.
+However, in chat-style models where the inputs and outputs are both uncertain, it becomes hard to structure such archtiectures.
+Compared to decoder-only models, encoder-decoder models to scale similarly to it, but learn somewhat more useful representations.
+Meanwhile, many existing text-image and video generation model condition on features from an encoder, but similar success has not been massively replicated from decoder-only models.
