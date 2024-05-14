@@ -1,15 +1,142 @@
 \chapter{Introduction to Reinforcement Learning}
 Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Foundations, in A Comprehensive Manner}
+In prior, we have learned that reinforcement learning focuses on learning a policy $\pi_\theta(a_t | o_t)$ that provides an action provided an observation.
+Here, $a_t$ is an action at timestep $t$, while $o_t$ is an observation at timestep $t$.
+Note that, in a not fully observed context, we instead discuss $s_t$ as a state at timestep $t$ in place of the observation.
+And, that, the decision paradigm we adopt here is Markovian: the only determining factor of the current timestep is the previous timestep.
+
+Different from imitation learning, a supervised learning setting, we use the reward function to notate the success of a performance.
+A reward function $r : \mathcal{S} \times \mathcal{A} \to \mathbb{R}$ is a function that provides a scalar reward for a state-action pair; as the name suggests, a higher reward resembles a better performance.
+However, reinforcement learning is not about short-term maximizations of reward functions, but long-term maintenance of high reward values.
+A temporal abstraction is therefore also imposed upon reinforcement learning formulations.
+
+\subsection{Mathematical Objects}
+A Markov Chain is a stochastic object defined as $\mathcal{M} = \{\mathcal{S}, \mathcal{P}\}$ where $\mathcal{S}$ is the set of all states (state-space), and $\mathcal{T}$ is a transition operator that encodes $p(s_{t+1}|s_t)$ for all possible pairs $(s_t, s_{t+1})$.
+The transition operator is expressable as a matrix, where each row sums to 1, and each element is a probability of transitioning from one state to another.
+That is, $\mathcal{T}_{i,j} = p(s_{t+1}=i | s_t=j)$.
+
+A reinforcement learning paradigm, then, can be framed as a variation of Markov Chain, called a Markov Decision Process.
+This process is formulated as $\mathcal{M} = \{\mathcal{S}, \mathcal{A}, \mathcal{T}, r\}$, where:
+\begin{bindenum}
+    \item $\mathcal{S}$ is the state-space, as before.
+    \item $\mathcal{A}$ is the action-space, a set of all possible actions.
+    \item $\mathcal{T}$ is the transition operator, as before.
+    \item $r$ is the reward function $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$, as before.
+\end{bindenum}
+A partially observed Markov decision process is just an augmented MDP: $\mathcal{M} = \{ \mathcal{S}, \mathcal{A}, \mathcal{O}, \mathcal{T}, \mathcal{E}, r\}$, where $\mathcal{E}$ is the emission probability $p(o_t | s_t)$.
+
+\subsection{Objective of Reinforcement Learning}
+In reinforcement learning, we learn a policy-representing object $\pi_\theta (a|s)$.
+In the chain rule of states within some trajectory, we may discover that:
+\[
+    p_\theta (s_1, a_1, \dots, s_T, a_T) = p(s_1) \prod_{t=1}^T \pi_\theta (a_t | s_t) p(s_{t+1} | s_t, a_t)
+\]
+We denote the trajectory $s_1, a_1, \dots, s_T, a_T$ as $\tau$.
+The objective of reinforcement learning is to maximize the expected return, or the expected sum of rewards:
+\[
+    J(\theta) = \mathbb{E}_{\tau \sim p_\theta} \left[ \sum_{t=1}^T r(s_t, a_t) \right]
+\]
+and we would like a policy equipped with the parameter $\theta$ that maximizes this return:
+\[
+    \theta^* = \arg \max_\theta J(\theta)
+\]
+
+Let us attempt to define the finite horizon case of the expected return using an augmented state-space for markov chain on state-action pairs.
+Therefore, by linearity of expectation,
+\begin{align*}
+    \theta^* &= \arg \max_\theta J(\theta) \\
+    &= \arg \max_\theta \mathbb{E}_{\tau \sim p_\theta} \left[ \sum_{t=1}^T r(s_t, a_t) \right] \\
+    &= \arg \max_\theta \sum_{t=1}^T \mathbb{E}_{\tau \sim p_\theta} \left[ r(s_t, a_t) \right]
+\end{align*}
+That also means, in an infinite-horizon case, where $T = \infty$, our objective may become ill-defined unless we obtain a finite mean of reward.
+
+\section{Value Functions}
+We can also express our expected reward objective in a recursive manner:
+\[
+    \mathbb{E}_{s_1 \sim p(s_1)} \left[
+        \mathbb{E}_{a_1 \sim p(a_1)} \left[
+            r(s_1, a_1) + \mathbb{E}_{s_2 \sim p(s_2|s_1, a_1)} \left[
+                \mathbb{E}_{a_2 \sim p(a_2|s_2)} \left[
+                    r(s_2, a_2) + \cdots
+                \right] | s_1, a_1
+            \right] | s_1
+        \right]
+    \right]
+\]
+To simplify this expression, we express:
+\[
+    Q(s_1) = r(s_1, a_1) + \mathbb{E}_{s_2 \sim p(s_2|s_1, a_1)} \left[
+        \mathbb{E}_{a_2 \sim p(a_2|s_2)} \left[
+            r(s_2, a_2) + \cdots
+        \right] | s_1, a_1
+    \right]
+\]
+such that,
+\[
+    \mathbb{E}_{\tau \sim p_\theta (\tau)} \left[
+        \sum_{t=1}^T r(s_t, a_t)
+    \right] =
+    \mathbb{E}_{s_1 \sim p(s_1)} \left[
+        \mathbb{E}_{a_1 \sim p(a_1)} \left[
+            Q(s_1) | s_1
+        \right]
+    \right]
+\]
+Now, with this concise notation, we may easily modify $\pi_\theta$ based on the function $Q$.
+The question, then, is how do we know the function $Q$, otherwise called the Q-function?
+
+So, as we have defined in prior, the Q-function is expressed as:
+\[
+    Q^\pi (s_t, a_t) = \sum_{t=t'}^T \mathbb{E}_{\pi_\theta} \left[ r(s_t, a_t) | s_t, a_t \right]
+\]
+The value function, then, is defined as:
+\[
+    V^\pi (s_t) = \mathbb{E}_{a_t \sim \pi_\theta(a_t | s_t)} \left[ Q^\pi (s_t, a_t) \right]
+\]
+Now, we can also express the reinforcement learning objective as $\mathbb{E}_{s_1 \sim p(s_1)} [V^\pi (s_1)]$.
+
+How can we use Q-functions and value functions?
+One immediate application of them is to formulate a policy that only outputs the maximum-Q-inducing action.
+Another idea would be to compute the gradient of $Q^\pi$ to increase the probability of a good action $a$, building on the precondition that $Q^\pi (s, a) > V^\pi (s)$ implies $a$ as better than an average action, so that we modify $\pi (a|s)$ to increase the probability of the aforementioned condition.
+
+\section{Algorithms in Reinforcement Learning}
+Reinforcement learning algorithms share the following high-level anatomy:
+\begin{bindenum}
+    \item Collect data from the environment (via running the policy).
+    \item Update the policy using the collected data (to fit the policy's model).
+    \item Improving the policy (this is some form of optimization).
+\end{bindenum}
+Here, generating samples has an expense that depends on the task of reinforcement learning; for example, under a robotics setting, the sample generation process is very costly without a simulator.
+Fitting a model and improving policies also has an expense dependent on the approach.
+
+\subsection{Diversity in RL Algorithms}
+Here is a general categorization of reinforcmenet learning algorithms.
+
+\textbf{\textit{Policy Gradient}} algorithms directly differentiate the expected-reward objective.
+While the gradient can be estimated, the improvement of policy relies on a gradient descent step that will be introduced in the next lecture.
+
+\textbf{\textit{Value-based}} algorithms estimate a value function or Q function of the optimal policy, rather than having an explicit policy.
+In this family of algorithms, we use a model to fit $V(s)$ or $Q(s, a)$, and use this model to plan actions. The policy is simply $\pi(s) = \arg \max_a Q(s, a)$.
+
+\textbf{\textit{Actor-Critic}} algorithms combine the two, where the critic is an estimator of the value function, and the improvement of policy relies on a gradient descent step.
+
+\textbf{\textit{Model-based}} algorithms learn a model of the environment, and use this model to plan actions.
+For model-based algorithm, fitting a model also involves learning a transition operator $\mathcal{T}$, while the policy improvement aspect has many options: (1) using the learned transition to plan eventual actions; (2) backpropagating gradients into the policy network; (3) using the transiton model to learn a value function, and use dynamic programming to accelerate the improvement progress.
+
+Different families of algorithms have tradeoffs of performance on several fields, ranging across the following examples:
+
+\textbf{\textit{Sample Efficiency.}}
+Sample efficiency is the matter of ``how many samples do we need to get a good policy'', and one important factor of this is whether the algorithm is on-policy (online, new samples are needed upon any update of policy) or off-policy (the algorithm improves the policy without generating new samples from that policy).
+On the spectrum of sample efficiency, on-policy algorithms generally host less sample efficiency.
+However, having a less sample efficiency is acceptable because of the tradeoff it can bring, such as the need of online-ness that is saved by on-policy algorithms' online-ness in exchange of smaller sample efficiency.
+
+\textbf{\textit{Stability.}}
+Stability and ease of use discusses whether the algorithm converges, how often does it converge, and what does the algorithm converge to (if at all).
+This is a question because reinforcement learning might not be using gradient-based optimizations.
+For example, Q-learning is a fixed-point iteration scheme, while model-based RL concentrates on a transition model not optimized for expected reward.
+
+\textbf{\textit{Assumptions from Algorithms.}}
+Algorithms pose assumptions about our reinforcement learning paradigm.
+Some common assumptions include: full observability, episodic learning, and continuity or smoothness of specific objectives.

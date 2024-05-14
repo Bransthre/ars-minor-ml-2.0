@@ -1,15 +1,152 @@
 \chapter{Policy Gradients}
 Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Foundations of Policy Gradient}
+Remember that the objective of reinforcement learning is to maximize the expected return of our policy $\pi_\theta$ over time.
+In deep reinforcement learning, we would formulate that the policy is a neural network taking in some state $s_t$ and outputting some action $a_t$.
+And, we may also define a trajectory distribution:
+\[
+    p_\theta (s_1, a_1, \dots, s_T, a_T) = p(s_1) \prod_{t=1}^T \pi_\theta (a_t | s_t) p(s_{t+1} | s_t, a_t)
+\]
+In this note, the shorthand of such distribution is $p_\theta (\tau)$.
+
+Crucially, in development of model-free algorithms, we do not assume that we know the transition probabilities $p(s_{t+1} | s_t, a_t)$ or the initial state probability $p(s_1)$, but treat real-world interaction as an act of sampling per se.
+And, the objective of our algorithm is to find parameter $\theta$ where:
+\[
+    \theta^* = \arg \max_\theta J(\theta)
+\]
+where
+\[
+    J(\theta) = \mathbb{E}_{\tau \sim p_\theta (\tau)} \left[ \sum_t r(s_t, a_t) \right]
+\]
+for which the finite horizon case can be simplified into a sum of expectations via the linearity of expectation.
+
+Let us attempt to evaluate the objective of our algorithm before discussing its optimization.
+We may find an unbiased estimator of $J(\theta)$ by sampling trajectories via policy-world interactions:
+\[
+    J(\theta) \sim \frac{1}{N} \sum_i \sum_t r(s_{i,t}, a_{i,t})
+\]
+However, we do want to improve the objective beyond estimating it.
+The estimate of the derivative of objective also needs to be feasible without knowledge of transition probability and state prior.
+To satisfy the above demands, let us propose as follows:
+\begin{align*}
+    J(\theta) &= \mathbb{E}_{\tau \sim p_\theta (\tau)} [r(\tau)] \\
+    &= \int p_\theta(\tau) r(\tau) \,d\tau \\
+    \nabla_\theta J(\theta) &= \int \nabla_\theta p_\theta(\tau) r(\tau) \,d\tau \\
+    &= \int p_\theta(\tau) \nabla_\theta \log p_\theta(\tau) r(\tau) \,d\tau \\
+    &= \mathbb{E}_{\tau \sim p_\theta (\tau)} [\nabla_\theta \log p_\theta(\tau) r(\tau)] \\
+    &= \mathbb{E}_{\tau \sim p_\theta (\tau)} \left[ \left( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_t | s_t) \right) \left( \sum_{t=1}^T r(s_t, a_t) \right) \right]
+\end{align*}
+
+To evaluate the policy gradient, we can run the policy to generate samples from $p_\theta (\tau)$, and then multiply them by the gradients.
+Then, we improve the policy by taking a step in the direction of the gradient:
+\[
+    \theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)
+\]
+
+The sketch of the algorithm, otherwise known as REINFORCE, is as follows:
+\begin{bindenum}
+    \item Sample $\{\tau^i\}$ from running the policy $\pi_\theta$.
+    \item Compute the policy gradient: $\nabla_\theta J(\theta) = \sum_i (\sum_t \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t})) (\sum_t r(s_{i,t}, a_{i,t}))$.
+    \item Update the policy: $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$.
+    \item Repeat.
+\end{bindenum}
+
+Policy gradients are then reward-weighted versions of maximum likelihood objective.
+This may be observed from their expressions:
+\[
+    \begin{cases}
+        \nabla_\theta J(\theta) &\sim \frac{1}{N} \sum_i (\sum_t \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t})) (\sum_t r(s_{i,t}, a_{i,t})) \\
+        \nabla_\theta J_{ML} (\theta) &\sim \frac{1}{N} \sum_i (\sum_t \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t}))
+    \end{cases}
+\]
+That is, in policy gradient, high reward trajectories have increased log probabilities, while low reward trajectories have decreased log probabilities.
+
+Under the constraint of continuous actions, on the other hand, we select a representation of policy $\pi$ that outputs a representation of continuous distribution, such as a Gaussian policy: $\pi_\theta (a_t | s_t) = \mathcal{N}(f(s_t), \Sigma)$.
+Then, the log probability of an action can be written in terms of an anisotropic Gaussian distribution's, or some other continuous distribution's PDF.
+
+Note that, the implementation of policy gradient deamnds automatic differentiation, such that the policy gradient can be computed by a library within reasonable computation time.
+Typically, this is inefficiency, becuase neural networks have more parameters within itself than samples that it uses.T
+To calculate the gradient in a neural network, we would often instead employ back-propagation, which the automatic differentiation will set up a computational graph for us as well when it comes to computation of poicy gradient.
+We may, fortunately, construct a computational graph for which the gradient of it is the policy gradient.
+This is often by the involvement of Q values, and having an alternative objective $\tilde{J}(\theta)$ which grants us the policy gradient on its computational graph of gradients.
+
+
+\section{Reducing Variance in Policy Gradient}
+However, the property of policy gradients to skew away from bad trajectories and towards good ones, and this can introduce pathological changes led by high variance of its estimator.
+The policy gradient estimator we described before has very high variance depending on the acquired samples.
+
+\subsection{Causality Trick}
+The first trick we can use to reduce variance is causality, which is that a policy at time $t'$ cannot affect the reward at time $t$ when $t < t'$.
+This allows us to rewrite the policy gradient as:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_i \sum_t \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t}) \left( \sum_{t'=t}^T r(s_{i,t'}, a_{i,t'}) \right)
+\]
+Which allows us to discard rewards from the past that our reward policy cannot impact.
+Then, we obtain a lower-variance estimate, because the total sum is a smaller number (which accompanies a smaller variance).
+This is otherwise known as a reward-to-go formulation.
+
+\subsection{Baseline Trick}
+The second trick we can use to reduce variance is the baseline trick.
+Becuase subtracting a baseline from the reward aspect in policy gradient does not change its expectation (a proof is provided in lecture), but changes its variance, for any baseline $b$, the following trick reduces the variance of the policy gradient while maintaining the estimator as unbiased.
+Let $b = \frac{1}{N} \sum_{i=1}^N r(\tau_i)$. Then, we use the baselined policy gradient instead:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \nabla_\theta \log p_\theta (\tau) [r(\tau) - b]
+\]
+Furthermore, via derivation, we find the optimal variance-reducing baseline to have value:
+\[
+    b^* = \frac{\mathbb{E} [{g(\tau)}^2 r(\tau)]}{\mathbb{E} [{g(\tau)}^2]}
+\]
+
+\section{Off-Policy Policy Gradient}
+Because the policy gradient is a sample-based estimator, the requirement of sampling from the policy upon every policy update becomes a large operational cost.
+This is a disadvantage of the REINFORCE algorithm's online-ness (it being on-policy).
+This immediately attracts us to convert the algorithm into an off-policy one, via an access to some $\bar{p}(\tau)$ that is not the policy we are optimizing for, so that we can update the policy while being offline (that is to be off-policy, then).
+
+This may be operated along an importance sampling trick:
+\begin{align*}
+    \mathbb{E}_{x \sim p(x)} [f(x)]
+    &= \int p(x) f(x) \,dx \\
+    &= \int \frac{p(x)}{q(x)} q(x) f(x) \,dx \\
+    &= \mathbb{E}_{x \sim q(x)} \left[ \frac{p(x)}{q(x)} f(x) \right]
+\end{align*}
+Then, we obtain our reinforcement learning objective as:
+\[
+    J(\theta) = \mathbb{E}_{\tau \sim \bar{p}(\tau)} \left[ \frac{p_\theta (\tau)}{\bar{p}(\tau)} r(\tau) \right]
+\]
+where
+\begin{align*}
+    \frac{p_\theta (\tau)}{\bar{p}(\tau)}
+    &= \frac{p(s_1) \prod_{t=1}^T \pi_\theta (a_t | s_t) p(s_{t+1} | s_t, a_t)}{p(s_1) \prod_{t=1}^T \bar{\pi} (a_t | s_t) p(s_{t+1} | s_t, a_t)} \\
+    &= \prod_{t=1}^T \frac{\pi_\theta (a_t | s_t)}{\bar{\pi} (a_t | s_t)}
+\end{align*}
+The policy gradient is then re-expressed to be:
+\begin{align*}
+    \nabla_{\theta'} J(\theta') &= \mathbb{E}_{\tau \sim \bar{p}(\tau)} \left[ \frac{p_\theta (\tau)}{\bar{p}(\tau)} \nabla_{\theta'} \log \pi_{\theta'}(\tau) r(\tau) \right] \\
+    &= \frac{1}{N} \sum_i (\sum_t \prod_{t=1}^T \frac{p_\theta (\tau)}{\bar{p}(\tau)}) (\sum_t \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t})) (\sum_t r(s_{i,t}, a_{i,t})) \\
+\end{align*}
+This expression can be further advanced using the causality trick.
+
+\section{Covariant Policy Gradient}
+There exist other problems with policy gradient algorithms.
+For instance, suppose we have a one-dimensional action space, where the policy is Gaussian.
+Then, as the gradient with respect to the variance becomes larger due to the reduction of variance over time development, we will find the policy gradient not quite pointing the agent towards an optimum (destination).
+Therefore, following the policy gradient takes a long time until the optimal parameter is reached.
+
+One approach to prevent this problem is known as covariant/natural policy gradient.
+To choose the learning rate $\alpha$ of our policy gradient step, we take into account that some parameters change probabilities a lot more than others, and therefore give learning rates corresponding to the sensitivity of each parameter.
+That is, we instead follow the step:
+\[
+    \theta' \leftarrow \arg \max_{\pnorm[2]{\theta' - \theta}{2} \leq \epsilon} {(\theta' - \theta)}^T \nabla_{\theta'} J(\theta)
+\]
+We are free to replace the constraint $\pnorm[2]{\theta' - \theta}{2} \leq \epsilon$ with a different parameterization-independent divergence measure, such as $D_{KL} (\pi_\theta', \pi_\theta) \leq \epsilon$.
+The quadratic Taylor expansion of divergence constraints further enable different optimization program formulations.
+Specifically, the quadratic Taylor expansion of KL divergence stated above grants us a policy fradient step:
+\[
+    \theta \leftarrow \theta + \alpha F^{-1} \nabla_\theta J(\theta)
+\]
+where $F$ is resulted from the use of KL divergence and known as the Fisher Information matrix:
+\[
+    F = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta (a|s) \nabla_\theta \log {\pi_\theta (a|s)}^T \right]
+\]
+And we may solve for an optimal learning rate $\alpha$ while solving $F^{-1} \nabla_\theta J(\theta)$.

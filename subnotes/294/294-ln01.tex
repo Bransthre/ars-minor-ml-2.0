@@ -1,15 +1,27 @@
 \chapter{Introduction to Deep Unsupervised Learning}
-Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Introduction to the Subject}
+Deep unsupervised learning concerns capturing rich patterns in raw data wtith deep networks in a label-free way.
+This involves generative models, which recreate a raw data distribution, as well as self-supervised learning, which are puzzle tasks that require semantic understanding.
+
+The expectation of required unsupervised learning (and a massive amount of it) comes from the large number of ``synapses'' that a brain must use to learn (which we equate to parameters).
+As expected, then, foundational models need a tremendous amount of information to build a generalization of semantic understanding, ``common sense''.
+A notable model ``LeCake'' was proposed in this perspective, stating that a ``cake'' of machine learning is constructed as follows:
+\begin{bindenum}
+    \item Unsupervised/Predictive Learning: The body of cake, the most important part of the cake
+    \item Supervised Learning: The icing of cake, for a generally smaller bit per sample.
+    \item Reinforcement Learning: The cherry on top, for small bit per sample that finishes up an application.
+\end{bindenum}
+
+An Ideal Intelligence that we refer to in this discipline discusses compression of dataset into a simple expression, and finding a pattern as a short description of raw data (which we call a low Kolmogorov Complexity), such as a summary vector.
+That is, we aim to present datasets in a compressed, efficient form.
+And, we also aim for optimal inference, which we know by Solomonoff Induction and demands induction via shortest code-length (with the model being referred to as a program of codes).
+We also what something that is extensible to optimal action making agents (AIXI).
+The ultimate demand, and a major assumption, follows as:
+\begin{quote}
+    Assume we pretrain unsupervised on distribution $\mathcal{D}_1$ and then finetune on $\mathcal{D}_2$.
+    If $\mathcal{D}_1$ and $\mathcal{D}_2$ are related, then compressing $\mathcal{D}_2$ conditioned on $\mathcal{D}_1$ should be more efficient than compressing $\mathcal{D}_2$ directly.
+    Therefore, pretraining accelerates learning.
+\end{quote}
+
+Aside from theoretical interests, DUL has made powerful applications across generating novel data, conditional synthesis technology, compression of data, improving downstream tasks via pretraining, as well as being flexible building blocks.
