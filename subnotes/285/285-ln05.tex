@@ -1,15 +1,121 @@
 \chapter{Actor-Critic Algorithms}
 Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+
+\section{Policy Evaluation}
+Recall from policy gradient that we have considered such a value:
+\[
+    \hat{Q}_{i, t'} = \sum_{t=t'}^T r(s_{i,t}, a_{i,t})
+\]
+As this is a single-step estimate of the reward to go, we would rather compute an expectation over all possible state-action pairs to capture this reward-to-go estimation more closely.
+This problem is also directly related to the high variance of policy gradient methods. That is, the policy's computation fo reward-to-go would have a high variance due to it being a single-sample estimate of a quite complex expectation.
+Thus, we phrase the Q-function as:
+\[
+    Q(s_t, a_t) = \sum_{t'=t}^T \mathbb{E}_{\pi} \left[ r(s_{t'}, a_{t'} | s_t, a_t) \right]
+\]
+Meanwhile, we can phrase a baseline that is the expectation of reward-to-go over all possible trajectories starting from some specific state, forming what we call a value fucnction:
+\[
+    V(s_t) = \mathbb{E}_{a_t \sim \pi_\theta(a_t | s_t)} [Q(s_t, a_t)]
+\]
+And therefore, the Q-function provides us an insight on how good our action is than the average that is presented by the value function.
+This $Q(s_t, a_t) - V(s_t)$ expression is otherwise called an advantage function.
+
+Specifically, we would express the Q-function and Value function, which are respectively the total reward from taking $a_t$ in $s_t$ and the total reward from $s_t$, as $Q^\pi$ and $V^\pi$.
+Then, the advantage value $A^\pi(s_t, a_t)$ presents how much better $a_t$ is as an action.
+We would therefore have the following objective gradient:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^{T_i} \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t}) A^\pi(s_{i,t}, a_{i,t})
+\]
+where the better this estimate, the lower the variance of such estimate.
+
+Then, the objective of our algorithm naturally turns to attempting to fit the value function.
+Why the value function? This is becuase the Q-function is in fact form-able from the value function as:
+\[
+    Q^\pi(s_t, a_t) \sim r(s_t, a_t) + V^\pi (s_{t+1})
+\]
+Note that, the value function is only dependent on the state, making it easier to fit $V^\pi (s)$ than other functions.
+This fitting process is otherwise called policy evaluation.
+
+To estimate our value function, we can perform Monte Carlo methods, which is to run the policy and sample value functions, then averging them to make our estimator.
+This method is especially relevant in a reset-able context, like a simulator.
+Furthermore, we can approximate $V^\pi$ by using a neural network, which reduces our variance because the neural network can identify similar states and therefore estimate their values with mutual considerations.
+Particularly, the neural network would be capable of noticing the locality of space (that similar states would have similar rewards).
+Note that for the above process, we can perform a bootstrap estimate of the ideal target as:
+\[
+    y_{i,t} \sim r(s_{i,t}, a_{i,t}) + \hat{V}_\phi^\pi (s_{i,t+1})
+\]
+
+\section{Actor-Critic Algorithm}
+A batch actor-critic algorithm, based on policy evaluation, follows the outline below roughly:
+\begin{enumerate}
+    \item Sample $\{s_i, a_i\}$ from $\pi_\theta(a_i | s_i)$ by running it on the agent.
+    \item Fit $\hat{V}_\phi^\pi (s)$ to sampled reward sums
+    \item Evaluate $\hat{A}^\pi (s_i, a_i) = r(s_i, a_i) + \hat{V}_\phi^\pi (s_{i+1}) - \hat{V}_\phi^\pi (s_i)$
+    \item Compute the policy gradient:
+        \[
+            \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^{T_i} \nabla_\theta \log \pi_\theta(a_{i,t} | s_{i,t}) \hat{A}^\pi(s_{i,t}, a_{i,t})
+        \]
+    \item Update $\theta$ by a gradient step: $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$.
+\end{enumerate}
+
+To account for infinite-horizon settings, we use a discount factor that is exponentially applied across timesteps to prevent an infinitely large value function.
+This makes intuitive sense: we generally do not mind rewards that come in $100$ timesteps compared to what will come in $10$.
+The mathematical formulation this discount factor-involving equation is:
+\[
+    y_{i,t} \sim r(s_{i,t}, a_{i,t}) + \gamma \hat{V}_\phi^\pi (s_{i, t+1})
+\]
+where $\gamma \in [0, 1]$ is the discount factor. Popular choices of it lie in $[0.9, 0.99]$.
+This changes our policy gradient formulation into:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_i \sum_t \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \left( \sum_{t'=t}^T \gamma^{t'-t} r(s_{i,t'}, a_{i,t'}) \right)
+\]
+or \textbf{in}equivalently with more importance at earlier timesteps' decision:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_i \left(\sum_t \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t})\right) \left( \sum_{t'=1}^T \gamma^{t'-1} r(s_{i,t'}, a_{i,t'}) \right)
+\]
+the latter option is more naturally suited towards a discounted problem, but is also not necessarily the better solution.
+When applying discounts, we just replace the third step of batch actor-critic algorithm as:
+\[
+    A^\pi (s_i, a_i) = r(s_i, a_i) + \gamma \hat{V}_\phi^\pi (s_i') - \hat{V}_\phi^\pi (s_i)
+\]
+
+An online version of the actor-critic algorithm is also possible, where we update the policy after each timestep:
+\begin{enumerate}
+    \item Take an action $a \sim \pi_\theta (a|s)$, and obtain $(s, a, r, s')$.
+    \item Update the value function $\hat{V}_\phi^\pi$ using the target $y = r + \gamma \hat{V}_\phi^\pi (s')$.
+    \item Compute the advantage $A^\pi (s, a) = r + \gamma \hat{V}_\phi^\pi (s') - \hat{V}_\phi^\pi (s)$.
+    \item Construct, then, a policy gradient: $\nabla_\theta J(\theta) \sim \nabla_\theta \log \pi_\theta (a|s) \hat{A}^\pi (s, a)$.
+    \item Update $\theta$ by a gradient step: $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$.
+\end{enumerate}
+
+\section{Actor-Critic Design Decisions}
+To instantiate our algorithm as a deep reinforcement learning one, we need to consider choices for our value fucntion and policy function.
+The most fundamental design is to have the fitted value function and the policy as separate neural networks.
+This is a simple and stable option, but there will be no shared features between the actor (policy) and the critic, which we could have benefitted from.
+However, having shared layers for their networks will also cause shared gradients at different scales, which would then require more hyperparameter tuning to stabilize.
+
+Another point of discussion is batch-sizes, which related to the online version of our algorithm as it learns from occurring datapoints.
+Updating deep neural networks using SGD usually results in an overly high variance, so an online actor-critic algorithm functions best with batches, which can be simply enabled by parallelization.
+That is to have parallel simulated environments under different random seeds to collect data with.
+Therefore, across each parallel environment, we maintain the transition acuqiring-policy updating two-step procedure.
+This design can be either synchronized or asynchronous, with the latter granting higher flexibility.
+Asynchronous threads may cause slight out-of-distribution updates for each policy, but in a theoretical ground, it would perform finely with respect to the original actor-critic standard.
+
+Yet another design decision discusses whether we can remove the on-policy assumption entirely.
+This is the principle of an off-policy actor-critic, which provides a replay buffer for transition sampling from.
+This allows us to update our policy using data we logged into the replay buffer, which may have came from an older version of the policy.
+
+\section{Critics as Baselines}
+The critic in an actor-critic algorithm can be used as a baseline for the policy gradient, and this provides for an interesting tradeoff with respect to the actor-critic algorithm we usually know.
+The actor-critic policy gradient is a low-variance estimate but biased, while the original policy gradient is unbiased but has a high variance.
+To keep the estimator unbiased while using the fitted value function $\hat{V}_\phi^\pi$, we may use the following estimator for policy gradient:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_i \sum_t \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \left( \left( \sum_{t'=t}^T \gamma^{t'-t} r(s_{i,t'}, a_{i,t'}) \right) - \hat{V}_\phi^\pi (s_{i,t}) \right)
+\]
+which is low-variance and unbiased.
+
+Methods that use state and action-dependent baselines are also known as control-variates.
+They are another way for variance reduction and unbiased-ness:
+\[
+    \nabla_\theta J(\theta) \sim \frac{1}{N} \sum_i \sum_t \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) (\hat{Q}_{i,t} - Q_\phi^\pi (s_{i,t}, a_{i,t})) + \frac{1}{N} \sum_i \sum_t \nabla_\theta \mathbb{E}_{a_t \sim \pi_\theta} [Q_\phi^\pi (s_{i,t}, a_t)]
+\]
+Some other interesting tricks, like GAE and n-step return estimators, are not to be written in this chapter but considered as separate paper reviws.

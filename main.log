@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  14 MAY 2024 16:47
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2022.6.26)  16 MAY 2024 13:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1114,10 +1114,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] (./subnotes/acknowledgements.tex) [3] (./main.toc [4
 
-] [5] [6] [7]
-Underfull \vbox (badness 3439) has occurred while \output is active []
-
- [8])
+] [5] [6] [7] [8])
 \tf@toc=\write7
 \openout7 = `main.toc'.
 
@@ -1251,166 +1248,160 @@ Underfull \vbox (badness 2065) has occurred while \output is active []
 
 ] [49] [50]) [51] (./subnotes/285/285-ln05.tex
 Chapter 29.
-) [52
+[52
 
-] (./subnotes/285/285-ln06.tex
+] [53]) [54] (./subnotes/285/285-ln06.tex
 Chapter 30.
-) [53
+) [55
 
 ] (./subnotes/285/285-ln07.tex
 Chapter 31.
-) [54
+) [56
 
 ] (./subnotes/285/285-ln08.tex
 Chapter 32.
-) [55
+) [57
 
 ] (./subnotes/285/285-ln09.tex
 Chapter 33.
-) [56
+) [58
 
 ] (./subnotes/285/285-ln10.tex
 Chapter 34.
-) [57
+) [59
 
 ] (./subnotes/285/285-ln11.tex
 Chapter 35.
-) [58
+) [60
 
 ] (./subnotes/285/285-ln12.tex
 Chapter 36.
-) [59
+) [61
 
 ] (./subnotes/285/285-ln13.tex
 Chapter 37.
-) [60
+) [62
 
 ] (./subnotes/285/285-ln14.tex
 Chapter 38.
-) [61
+) [63
 
 ] (./subnotes/285/285-ln15.tex
 Chapter 39.
-) [62
+) [64
 
 ] (./subnotes/285/285-ln16.tex
 Chapter 40.
-) [63
+) [65
 
 ] (./subnotes/285/285-ln17.tex
 Chapter 41.
-) [64
+) [66
 
 ] (./subnotes/285/285-ln18.tex
 Chapter 42.
-) [65
+) [67
 
 ] (./subnotes/285/285-ln19.tex
 Chapter 43.
-) [66
+) [68
 
 ] (./subnotes/285/285-ln20.tex
 Chapter 44.
-) [67
+) [69
 
 ] (./subnotes/285/285-ln21.tex
 Chapter 45.
-) [68
+) [70
 
 ] (./subnotes/285/285-ln22.tex
 Chapter 46.
-) [69
+) [71
 
-] [70
+] [72
 
 ] (./subnotes/294/294-ln01.tex
 Chapter 47.
-) [71
+) [73
 
 ] (./subnotes/294/294-ln02.tex
 Chapter 48.
 
 Underfull \vbox (badness 2608) has occurred while \output is active []
 
- [72
+ [74
 
-] [73] [74]) [75] (./subnotes/294/294-ln03.tex
+] [75] [76]) [77] (./subnotes/294/294-ln03.tex
 Chapter 49.
-) [76
+) [78
 
 ] (./subnotes/294/294-ln04.tex
 Chapter 50.
-) [77
+) [79
 
 ] (./subnotes/294/294-ln05.tex
 Chapter 51.
-) [78
+) [80
 
 ] (./subnotes/294/294-ln06.tex
 Chapter 52.
-) [79
+) [81
 
 ] (./subnotes/294/294-ln07.tex
 Chapter 53.
-) [80
+) [82
 
 ] (./subnotes/294/294-ln08.tex
 Chapter 54.
-) [81
+) [83
 
 ] (./subnotes/294/294-ln09.tex
 Chapter 55.
-) [82
+) [84
 
 ] (./subnotes/294/294-ln10.tex
 Chapter 56.
-) [83
+) [85
 
 ] (./subnotes/294/294-ln11.tex
 Chapter 57.
-) [84
+) [86
 
 ] (./subnotes/294/294-ln12.tex
 Chapter 58.
-) [85
+) [87
 
 ] (./subnotes/294/294-ln13.tex
 Chapter 59.
-) [86
+) [88
 
 ] (./subnotes/294/294-ln14.tex
 Chapter 60.
-) [87
+) [89
 
 ] (./subnotes/294/294-ln15.tex
 Chapter 61.
-) [88
+) [90
 
-] [89
+] [91
 
 ] (./subnotes/mubili/mubili-ln01.tex
 Chapter 62.
-) (./subnotes/revision_log.tex [90
+) (./subnotes/revision_log.tex [92
 
-]) [91
+]) [93
 
 ] (./main.aux)
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: 49DF7418448BF256AE2513E6601F224C;26235
-(rerunfilecheck)             After:  EB92E28FC813C2D68B4431C9D2973A12;26429.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 0994E8DC549A964BF67D703A4DDB7480;26993.
  ) 
 Here is how much of TeX's memory you used:
- 64274 strings out of 475882
- 1622659 string characters out of 5806027
- 2248220 words of memory out of 5000000
- 84221 multiletter control sequences out of 15000+600000
+ 64269 strings out of 475882
+ 1622574 string characters out of 5806027
+ 2249014 words of memory out of 5000000
+ 84216 multiletter control sequences out of 15000+600000
  502799 words of font info for 81 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  114i,11n,117p,845b,1389s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (91 pages).
+Output written on main.pdf (93 pages).
