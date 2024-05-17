@@ -1,0 +1,70 @@
+\chapter{Guest Lecture: Reinforcement Learning from Human Feedback}
+A language model is, generally, an autoregressive model over tokens.
+A Language Model $\pi$ maps a token sequence $X = \{x_1, \dots, x_n\}$ to some distribution over $V: x_{n+1} \sim \pi(x_{n+1} | x_1, \dots, x_n)$.
+In a reinforcement leraning paradigm, then, imagine that the token sequences per se are states, and the action of a model is a token, or sequence of tokens, that it outputs.
+In this guest lecture, we discuss the use of RLHF (Reinforcement Learning from Human Feedback) for language models, and many relevant works for it.
+
+\section{Reinforcement Learning from Human Feedback}
+Reinforcement Learning from Human Feedback is a procedure with four main steps:
+\begin{enumerate}
+    \item Step 0: Unsupervised pre-training via tons of Internet data
+    \item Step 1: A supervised fine-tuning of model based on human demonstrations
+    \item Step 2: Fitting a reward model to human preferences.
+    \item Step 3: Optimize a policy to maximize learned rewards
+\end{enumerate}
+
+In a reinforcement learning step, how do we reward the agent?
+Note that ideally, we would assign high reward to things that humans prefer, and vice versa.
+Therefore, the reward is not hard-coded; rather, it should be elicited from human data.
+This manner is slightly similar to inverse reinforcement learning.
+The question, then, is how the human data should be (1) elicited, (2) processed.
+With some considerations, the elicitation of human data comes down to the form of pairwise preference judgment, providing $\mathcal{D} = \{x^{(i)}, y_w^{(i)}, y_l^{(i)}\}$.
+From the pairwise preference judgments, we further elicit scores out of each responses via economic models, such as Bradley-Terry Model (and specifically that model, for the discussion of this guest lecture).
+
+Now, we obtain a probabilistic model that can be converted into a loss function for the model,
+\[
+    \mathcal{L}_R (\phi, \mathcal{D}) = - \mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma(r_\phi(x, y_w) - r_\phi(x, y_l)) \right]
+\]
+which we may train in negative maximum likelihood. We also call this model a ``reward model''.
+We therefore attempt to learn some model that acheives a high reward in the model.
+However, note that this approach can suffer from trajectories where the reward model is inaccurate.
+Therefore, we would require a constraint for our model to prevent it from overoptimization:
+\[
+    \max_{\pi_\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta (y|x)} [r_\phi (x, y)] - \beta \mathbb{D}_{KL} [\pi_\theta (y|x) || \pi_{ref} (y|x)]
+\]
+Then, we optimize this objective via PPO (or other reinforcement learning algorithms, PPO choice is just conducted by the author of related paper).
+
+\section{Direct Preference Optimization}
+RLHF with PPO suffers from (1) Implementation complexity, (@) Resource requirements, and (3) Stability of training, which comes from the inter-prompt shift of reward function that gives an additional degree of freedom to the model.
+Direct Preference Optimization serves as an algorithm to mitigate this problem with the core principle that, by parametrizing the reward model, it is possible to extract the optimal policy for learned reward model in closed form.
+
+How so? Note that the RLHF Objective is:
+\[
+    \max_{\pi_\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta (y|x)} [r_\phi (x, y)] - \beta \mathbb{D}_{KL} [\pi_\theta (y|x) || \pi_{ref} (y|x)]
+\]
+while the closed-form optimal policy is:
+\[
+    \pi^* (y|x) = \frac{1}{Z(x)} \pi_{ref} (y|x) \exp \left( \frac{1}{\beta} r_\phi (x, y) \right)
+\]
+where $Z(x) = \sum_y \pi_{ref} (y|x) \exp \left( \frac{1}{\beta} r_\phi (x, y) \right)$ is a normalizing constant.
+However, note again that we cannot immediately use the normalizing constant due to intractability of its computation.
+Therefore, we rearrange the closed-form optimal policy to some parametrization of a reward function:
+\[
+    r(x, y) = \beta \log \frac{\pi^*(y|x)}{\pi_{ref}(y|x)} + \beta \log Z(x)
+\]
+such that the ratio $\frac{\pi^*(y|x)}{\pi_{ref}(y|x)}$ results in a positive value when the response of $\pi^*$ triumphs thta of $\pi_{ref}$.
+Then, combining the above insights together, we obtain a loss function for the policy as:
+\[
+    \mathcal{L}_{DPO} (\pi_\theta; \pi_{ref}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma(\beta \log \frac{\pi_\theta (y_w|x)}{\pi_{ref} (y_w|x)} - \beta \log \frac{\pi_\theta (y_l|x)}{\pi_{ref} (y_l|x)}) \right]
+\]
+which is a tractable loss function to optimize. Furthermore, as $\pi_\theta$ is normalized, we managed to remove a degree of freedom.
+A concern regarding expressiveness and a note to resolve it exists in the paper discussed at this section.
+
+We can further decompose its gradient to understand the optimization process.
+Observe the gradient of DPO:
+\[
+    \nabla_\theta \mathcal{L}_{DPO} (\pi_\theta; \pi_{ref}) = -\beta \mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \sigma(\hat{r}_\theta (x, y_l) - \hat{r}_\theta (x, y_w)) \left[ \nabla_\theta \log \pi(y_w|x) - \nabla_\theta \log \pi(y_l | x) \right] \right]
+\]
+which, like policy gradient, suppresses unpreferred responses (trajectories) by suppressing the likelihood of its occurrence (and vice versa, just like policy gradient).
+
+In methodological summary, (1) DPO removes the RL training loop from RLHF; (2) DPO is simple, stable, and computationally cheaper than PPO; (3) DPO optimizes the same objective as RLHF.
