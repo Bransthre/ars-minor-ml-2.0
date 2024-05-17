@@ -1,15 +1,129 @@
 \chapter{Flow Models}
-Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+When we use a generative model, we want it to (1) have a good fit to the training data, (2) be able to evaluate the probability of an unseen datapoint occurring, (3) be able to sample from a particular learned distribution, and (4) a meaningful latent representation space.
+Autoregressive models, as we have introduced in last lecture, lacks a latent representation embedding space that is interpretatively meaningful.
+This is an edge of flow models over autoregressive models, although its methodology does not provide equally competent performances. 
+
+\section{Foundations of Flows}
+The objective of a flow model is to fit a density model $p_\theta(x)$ with some continuous $x \in \mathbb{R}^n$
+This fitting occurs via maximum likelihood estimation, which seeks an optimal parameter for maximizing a likelihood-associated objective.
+To fit a density model, we instead formulate the learned distribution as $p_\theta (x) = \sum_{i=1}^k \pi_i \mathcal{N} (x; \mu_i, \sigma_i^2)$, where we learn the means and variacnes of components.
+This is otherwise known as a Gaussian mixture, which can form complicated distributions using a weighted sum, but doesn't quite work for high-dimensional data because the sampling process of such mixtures is just picking a cluster center and adding gaussian noises, rather than looking at the mixture holistically.
+
+Provided that mixtures are not naturall fits, we would instead train some transformation that lets limitedly expressive distributions succeed.
+This is the core principle of flow models.
+A flow model would take an original input $x$, process it, and generating some embedding $z = f_\theta (x)$ (where therefore $x = f_\theta^{-1} (z)$).
+Although, the implication of $f$'s invertibility is that $x$ and $z$ must have the same dimensions, as well as an inherenet constraint on the neural network structure.
+
+Observe that, for an invertible and differentiable $f_\theta$ (and it requires so that):
+\begin{align*}
+    z &= f_\theta (x) \\
+    p_\theta (x) \, dx &= p_\theta (z) \, dz \\
+    p_\theta (x) &= p(f_\theta (x)) \left| \pdv{f_\theta (x)}{x} \right| \\
+\end{align*}
+Then, we may find that:
+\[
+    \max_\theta \sum_i \log p_\theta(x) = \max_\theta \sum_i \log p_z(f_\theta (x)) + \log \left| \pdv{f_\theta}{x} (x) \right|
+\]
+such that, with an expression for $p_z$, we can optimize the objective via SGD.
+Then, there are two general choices for $z$: either we choose some invertible function class for $z$, or we use an embedding space density $z \sim p_Z(z)$ (which papers call a normalizing flow) (some examples are uniform distributions, Gaussian mixtures).
+Under the choice of some normalizing flow, sampling can be conducted via inverse transform sampling.
+Notably, in the special case where $p_Z(z)$ is $Uniform[0, 1]$ and the flow is defined as a parametrized CDF, the objective we described above directly recoevers the original objective for fitting the corresponding parametrized CDF.
+
+Can every distirbution be represented by a normalizing flow?
+Note that, as CDFs can convert any density into a uniform distirbution under inverse transform sampling scheme, we see that it is possible to ocnvert any smooth distribution $p(x)$ to smooth $p(z)$ via an intermediate uniform distribution.
+
+To recap, \textbf{flows} are differentiable, invertible mappings from data ($x$) to noise ($z$).
+We train so that the data distribution becomes a base distribution $p(z)$, under common choices like uniform or standard normal distributions, using the MLE objective we described above.
+Therefore, we achieve an inference step via transformation $f$, and sampling via $f^{-1}$.
+
+\section{2-Dimensional Flows}
+In a 2-dimensional circumstance, we formulate the original data and noise as follows:
+\begin{align*}
+    x_1 \rightarrow z_1 = f_{\theta_1} (x_1), &
+    x_2 \rightarrow z_2 = f_{\theta_2} (x_1, x_2) \\
+    z_1 \rightarrow x_1 = f_{\theta_1}^{-1} (z_1), &
+    z_2, x_1 \rightarrow x_2 = f_{\theta_2}^{-1} (x_1, z_2)
+\end{align*}
+Note that the dependence on $x_1$ in $f_{\theta_2}$ can be arbitraily complex, and there are no invertibility requirements for so.
+This dependence of $x_1$, rather than on $z_1$, is an inverse autoregressive flow.
+
+The training objective is to be rephrased as follows:
+\begin{align*}
+    \log p_\theta (x_1, x_2)
+    &= \log_{p_{Z_1} (z_1)} + \log \left| \pdv{z_1(x_1)}{x_1} \right| + \log_{p_{Z_2} (z_2)} + \log \left| \pdv{x_2(x_1, x_2)}{x_2} \right| \\
+    &= \log_{p_{Z_1} (f_{\theta_1} (x_1))} + \log \left| \pdv{z_1(x_1)}{x_1} \right| + \log_{p_{Z_2} (f_{\theta_2} (x_1, x_2))} + \log \left| \pdv{x_2(x_1, x_2)}{x_2} \right| \\
+\end{align*}
+
+\section{n-Dimensional Flows}
+In this section, we discuss possible ways to generate n-dimensional flows.
+
+\subsection{Autoregressive Flows}
+Recall that the inference step follows from $f_\theta$, and sampling its inverse.
+The sampling process of a Bayes net is similarly a flow, and if it is autoregressive, we call it an autoregressive flow:
+\begin{align*}
+    &x_1 \sim p_\theta(x_1), &&x_1 = f_\theta^{-1} (z_1) \\
+    &x_i \sim p_\theta(x_i | x_{<i}), &&x_i = f_\theta^{-1} (z_i, x_{<i})
+\end{align*}
+To fit autoregressive flows, we still use the objsecitve:
+\[
+    p_\theta(x) = p(f_\theta (x)) = \left| \det \pdv{f_\theta (x)}{x} \right|
+\]
+Note here that the computation of $x \rightarrow z$ is similar to the log-likelihood computation of an autoregressive model, while the inverse is the sampling procedure of that.
+
+In an inverse autoregressive flow, we instead observe that:
+\begin{align*}
+    &z_1 = f_\theta^{-1}(x_1), &&x_1 = f_\theta (z_1) \\
+    &z_i = f_\theta^{-1}(x_i; z_{<i}), &&x_i = f_\theta (z_i; z_{<i}) \\
+\end{align*}
+In the case of IAF, $x \rightarrow z$ is instead the sampling procedure of an autoregressive model, while $z \rightarrow x$ is the log-likelihood computation.
+Therefore, IAF sampling is faster.
+For a neater comparison, autoregressive flows have parallel training and serial sampling, while the opposite occurs for inverse autoregressive flows.
+Several models exploit the fast sampling of inverse autoregressive flows, such as Parallel Wavenet and IAF-VAE.
+
+\subsection{RealNVP-like Architectures}
+In this approach, our sampling process $f^{-1}$ instead linearly transforms a small cube $\, dz$ into a small parallelepiped $\, dx$:
+\[
+    p(x) = p(z) \frac{{\rm vol}(\, dz)}{{\rm vol}(\, dx)} = p(z) \left| \det \dv{z}{x} \right|
+\]
+such that $x$ is likely if it maps to a large region in the $z$-space.
+We train such model with the MLE objective as follows:
+\[
+    \arg \min_\theta \mathbb{E}_x [- \log p_\theta (x)] = \mathbb{E}_x \left[ -\log p(f_\theta(x)) - \log \det \left| \pdv{f_\theta (x)}{x} \right| \right]
+\]
+But, a new requirement comes that the Jacobian determinant must be easy to calculate and differentiate for $f_\theta$.
+
+Because flows can be composed, we can use simplistic $f$ to resemble a complex and much expressive distribution.
+That is, suppose the transformation:
+\[
+    x \rightarrow f_1 \rightarrow f_2 \rightarrow \cdots \rightarrow f_k \rightarrow z
+\]
+Then we may observe,
+\begin{align*}
+    z &= f_k \circ f_{k-1} \circ \cdots \circ f_1 (x) \\
+    x &= f_1^{-1} \circ \cdot \circ f_k^{-1} (z) \\
+    \log p_\theta (x) &= \log p_\theta (z) + \sum_{i=1}^k \log \left| \det \pdv{f_i}{f_{i-1}} \right|
+\end{align*}
+
+For the simplistic flows $f_i$, let us consider the following examples:
+\begin{enumerate}
+    \item Affine flows (multivariate Gaussian), where $f(x) = A^{-1} (x - b)$ for paramteres $A$ and $b$.
+    \item Element-wise flows, where $f_\theta ((x_1, \dots, x_d)) = (f_\theta (x_1), \dots, f_\theta (x_d))$.
+\end{enumerate}
+A NICE/RealNVP architecture, for instance, uses affine coupling layer that is both invertible and easily nonlinear upon their design, and there are no restrictions on the neural networks for such architecture.
+
+\subsection{Brief Introduction of Glow, Flow++, FFJORD}
+This subsection's approach disucsses the choice of coupling transformation.
+In a Bayes net, coupling dependency is defined, but choice of invertible transformation $f$ becomes a design question.
+While NICE, RealNVP, IAF-VAE, and many models use affine transformations, we also find in other studies that more complex, nonlinear transformations do lead to better performances.
+In Flow++, for instance, The CDFs and inverse CDFs of Gaussian or Logistic mixtures are used, with some modification in neural net architecture such as self-attention.
+Glow, from OpenAI, instead uses $1 \times 1$ convolutions along large-scale training.
+Continuous time flows (FFJORD), meanwhile, allow for unrestricted architectures and guarantees invertibility as well as fast log probability computation.
+
+\section{Dequantization}
+One large assumption of flow models is the use of continuous distributions.
+In the case of fitting discrete distributions, although it eventually finds the associated peaks of the distribution, it is numerically problematic and not well-defined as a fitting process.
+To resolve this problem of degeneracy, we would instead want to consider the probability of some discrete value as:
+\[
+    P_{model} (x) := \int_{{[0, 1]}^D} p_{model} (x + u) \, du
+\]
+That is to dequantize the data by adding noise to it, where the noise $u$ is popularly drawn uniformly from ${[0, 1]}^D$.
