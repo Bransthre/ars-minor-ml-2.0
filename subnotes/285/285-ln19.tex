@@ -1,15 +1,136 @@
 \chapter{Inverse Reinforcement Learning}
-Chapter Description.
-\section{section title}
-Section.
-\begin{ln-theorem}{Tested Theorem}{}
-    I am the bone of my sword.
-\end{ln-theorem}
-\begin{ln-define}{Tested Theorem}{}
-    Steel is my body and fire is my blood.
-\end{ln-define}
-\begin{ln-quest}{Rules?}{}
-    I have created over a thousand blades.
-    \tcblower
-    Unknown to death, nor known to life.
-\end{ln-quest}
+So far, we manually designed reward functions to define a task, but what if we may instead learn a reward function from observing an expert, and then use reinforcement learning?
+In this algorithm's class, we apply an approximate optimality model from what we learned in last lecture, but now learn a reward.
+In today's lecture, we attempt to:
+\begin{itemize}
+    \item Understand the inverse reinforcement learning problem definition.
+    \item Understand how proabbilastic models of behavior can be used to derive inverse reinforcmeent learning algorithms.
+    \item Understand a few practical inverse reinforcement learning algorithms that one can use.
+\end{itemize}
+
+\section{Inverse Reinforcement Learning Problem}
+A definition of rational behavior is a framed act of reward-maximizing strategies, such as that modeled by DPO.
+Where, an irrational strategy outlines a behavior that does not maximize the reward, and therefore cannot be defined over a set of scalar values.
+Therefore, the modeling of human decision relies on the following framework:
+\[
+    a_1, \dots, a_T = \arg \max_{a_1, \dots, a_T} \sum_{t=1}^T r(s_t, a_t)
+\]
+or in a stochastic case,
+\[
+    \pi = \arg \max_\pi \mathbb{E}_{s_{t+1} \sim p(s_{t+1} | s_t, a_t), a_t \sim \pi(s_t, a_t)} [r(s_t, a_t)]
+\]
+We optimize the above prompt to explain the data of human motions we obtained.
+However, because humans are not perfectly optimal (in other words, they can be irrational), we want to use soft optimality models rather than something like above.
+
+On the other hand, learning reward functions is helpful in many ways.
+While in imitation learning, we provide expert demonstrations for a robot to replicate the behavior via BC.
+But when humans imitate other humans, we don't try to approximate $\pi(s)$.
+We watch something, figure out the intention behind it, and emulate the \underline{intentions} rather than the actions per se.
+This intention is signaled by the unknown reward function, but once we learn it well, we can understand the intentions of an action and therefore act more naturally.
+
+An inverse reinforcement learning problem, however, is underspecified: there can be multiple possible reward functions for any given set of demonstrations.
+What makes the demonstrations all the more incomprehensible to an algorithm is the lack of semantics that an algorithm has access to, such as what is a traffic light.
+
+\subsection{Forward vs. Inverse}
+To clarify inverse reinforcement learning, we can look at a comparison of it and forward reinforcement learning.
+
+\textbf{\textit{Forward Reinforcement Learning}}: Given states $s \in \mathcal{S}$, actions $a \in \mathcal{A}$, and rewards $r(s, a)$, we want to find the optimal policy $\pi^*$ that maximizes an objective.
+
+\textbf{\textit{Inverse Reinforcement Learning}}: Given states $s \in \mathcal{S}$, actions $a \in \mathcal{A}$, and demonstrations $\tau = (s_1, a_1, \dots, s_T, a_T)$, we want to find the reward function $r_\phi(s, a)$ that explains the demonstrations.
+Usually, we use some linear reward function: $r_\psi (s, a) = \sum_i \psi_i f_i(s, a) = \psi^T \vec{f}(s, a)$, or a neural network that takes $s, a$ to output a scalar.
+
+\subsection{Feature Matching IRL}
+In classic perspectives, people have approached IRL as such: given a linear reward function, if the features $\vec{f}$ are important, what if we can match its expected values?
+Let $\pi^{r_\psi}$ be an optimal policy for $r_\psi$, we can pick $\psi$ such that $\mathbb{E}_{\pi^{r_\psi}}[\vec{f}(s, a)] = \mathbb{E}_{\pi^*}[\vec{f}(s, a)]$.
+However, multiple $\psi$ vectors can still satisfy the above equation, causing ambiguity in the problem again.
+To specify a unique solution, we choose a maximum margin principle solution as in SVM:
+\[
+    \max_{\psi, m} m \quad \text{s.t.} \quad \psi^T \mathbb{E}_{\pi^*}[\vec{f}(s, a)] \geq \max_{\pi \in \Pi} \psi^T \mathbb{E}_{\pi}[\vec{f}(s, a)] - m
+\]
+This however still provides ambiguity across similar continuous policies, but to counter it people use a KL divergence in place of the variable $m$.
+
+The issues of this approach is that:
+\begin{enumerate}
+    \item Maximizing the margin is a bit arbitrary in terms of why the learned policy knows the intention of the reward, the assumption about expert behavior is not explicit.
+    \item There is no clear model of expert suboptimality.
+    \item This is a messy constrained optimization problem for largely parametrized functions.
+\end{enumerate}
+
+\section{Learning Reward Functions}
+We may learn the optimality variable of a trajectory to learn the reward function, which should follow optimality.
+Provided that $p(\mathcal{O}_t | s_t, a_t, \psi) = \exp(r_\psi (s_t, a_t))$, as we formulate that $p(\tau | \mathcal{O}_{1:T}, \psi) \propto p(\tau) \exp(\sum_t r_\psi (s_t, a_t))$, when we sample from this unknown optimal policy (expert behavior), we use maximum likelihood learning to extract the optimal policy:
+\[
+    \max_\psi \frac{1}{N} \sum_{i=1}^N \log p(\tau_i | \mathcal{O}_{1:T}, \psi) = \max_\psi \frac{1}{N} \sum_{i=1}^N r_\psi (\tau_i) - \log Z
+\]
+The log normalizer says that you cannot make all rewards larger just because they are seen trajectories. This log normalizer makes IRL difficult.
+
+We call $Z$ the partition Functions:
+\[
+    Z = \int p(\tau) \exp(r_\psi (\tau)) \,d\tau
+\]
+Then we may obtain that the derivative of our objective is:
+\[
+    \nabla_\psi \mathcal{L} = \mathbb{E}_{\tau \sim \pi^*(\tau)} [\nabla_\psi r_\psi (\tau_i)] - \mathbb{E}_{\tau \sim p(\tau|\mathcal{O}_{1:T}, \psi)} [\nabla_\psi r_\psi(\tau)]
+\]
+Our gradient is therefore the difference between expected expert policy return and expected current policy return. Therefore, we can follow the iterative approach of finding softly optimal policies, and as we sample trajectories from the current policy, we increase the reward of expert and decrease that of the current policy that is soft optimal.
+
+In practice, to estimate the above expectation, er may first understand that the second term of our objective is equivalently:
+\[
+    \mathbb{E}_{\tau \sim p(\tau|\mathcal{O}_{1:T}, \psi)} [\nabla_\psi r_\psi(\tau)] = \sum_{t=1}^T \mathbb{E}_{(s_t, a_t) \sim p(s_t, a_t | \mathcal{O}_{1:T}, \psi)} [\nabla_\psi r_\psi(s_t, a_t)]
+\]
+Then, using last lecture, we find that $p(a_t|s_t, \mathcal{O}, \psi) p(s_t | \mathcal{O}, \psi) \propto \beta(s_t, a_t) \alpha(s_t)$.
+Let a state-action marginal $\mu_t(s_t, a_t) \propto \beta_t(s_t, a_t) \alpha_t(s_t)$, then we can estimate the expectation as $\sum_{t=1}^T \vec{\mu}_t^T \nabla_\psi \vec{r}_\psi$.
+This is quite feasible for a smaller state-space.
+
+Then, we arrive at the Maximum Entropy IRL algorithm:
+\begin{enumerate}
+    \item Given $\psi$, compute the backward message $\beta(s_t, a_t)$.
+    \item Given $\psi$, compute the forward message $\alpha(s_t)$.
+    \item Compute $\mu_t(s_t, a_t) \propto \beta_t(s_t, a_t) \alpha_t(s_t)$.
+    \item Evaluate $\nabla_\psi \mathcal{L}$.
+    \item Gradient ascent step: $\psi \leftarrow \psi + \eta \nabla_{\psi} \mathcal{L}$.
+    \item Repeat until convergence.
+\end{enumerate}
+In the case where $r_\psi (s_t, a_t) = \psi^T \vec{f}(s_t, a_t)$, we can show that it optimizes:
+\[
+    \max_\psi \mathcal{H}(\pi^{r_\psi}) \quad \text{s.t.} \quad \mathcal{E}_{\pi^{r_\psi}} [\vec{f}] = \mathcal{E}_{\pi^*} [\vec{f}]
+\]
+That is to say, do not make any inference or assumptions other than what is validated by expert demonstrations.
+
+\section{Approximated IRL in High Dimensions}
+Maximum Entropy IRL requires: (1) Solving for soft optimal policy in the inner loop, and (2) enumerating all state-action tuples for visitation frequency and gradient.
+However, it is not practical because we don't know yet how to handle: (1) large and continuous state-action spaces, (2) states obtained via sampling only, and (3) unknown dynamics; all of which are relevant in reinforcement learning.
+
+\subsection{Unknown Dynamics and Large State/Action Spaces}
+Assume that we don't know the dynamics, but we can sample it.
+Then, what if we try to learn $p(a_t | s_t, \mathcal{O}, \psi)$ with a max-ent RL algorithm, then run that policy to sample our trajectories?
+While this is viable, it would require us to run the forward problem until convergence, which is difficult.
+So, instead of this expensive procedure, let's use lazy policy optimization.
+In this case, rather than learning $p(a|s, \mathcal{O}, \psi)$, we improve it a little.
+To deal with the now biased estimator representing a wrong distribution, we can use importance sampling, with the particular design of weights per trajectory to be:
+\[
+    w_j = \frac{\exp(\sum_t r_\psi(s_t, a_t))}{\prod_t \pi(a_t|s_t)}
+\]
+such that each policy update concerning $r_\psi$ will bring us closer to the target distribution.
+
+\section{IRLs and GANs}
+As we revisit the framework of IRL, we can see that it's quite like a game.
+Provided two players, an initial policy $\pi$ and a set of human demonstrations, we change the initial policy based on a specific objective.
+Specifically, again, expert demonstartions are made more likely, while samples are made less likely.
+
+This is quite like a GAN, which attempts to capture a particular data distribution.
+A GAN follows a two-party architecture as well: (1) A generator that takes in a random noise $z$ to turn it into a sample $x$ that comes from the target of capture, and (2) a discriminator that classifies ``True'' to all demonstration-originated data and ``False'' to generator-produced data.
+With the generator data sampled from $p_\theta(x)$ and data demonstrations from $p^*(x)$, the objective of the discriminator is to maximize the log-likelihood of data being from the demonstrators, and minimize the log-likelihood of data being from the generator.
+The generator, on the other hand, is trained to fool the discriminator.
+This is very much like the IRL procedure we framed before. Essentially, we expect $p_\theta (x) = p^*(x)$ upon convergence, allowing us to capture $p^*(x)$.
+
+For IRL as GAN, we choose a parametrization for discriminator to be:
+\[
+    D_\psi (\tau) = \frac{\frac{1}{Z} \exp(r(\tau))}{\prod_t \pi_\theta (a_t | s_t) + \frac{1}{Z} \exp(r(\tau))}
+\]
+Note that this discriminator will only be equal to 0.5 when the policy converges as noted above.
+We would optimize this objective with respect to $\psi$:
+\[
+    \psi \leftarrow \arg \max_\psi \mathbb{E}_{\tau \sim p^*} [\log D_\psi (\tau)] + \mathbb{E}_{\tau \sim \pi_\theta} [\log (1 - D_\psi (\tau))]
+\]
+The importance weights are subsumed into the partition function $Z$.

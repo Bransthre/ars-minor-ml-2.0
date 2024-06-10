@@ -114,61 +114,67 @@
 \contentsline {chapter}{\numberline {42}Connection between Inference and Control}{67}{chapter.42}%
 \contentsline {section}{\numberline {42.1}section title}{67}{section.42.1}%
 \contentsline {chapter}{\numberline {43}Inverse Reinforcement Learning}{68}{chapter.43}%
-\contentsline {section}{\numberline {43.1}section title}{68}{section.43.1}%
-\contentsline {chapter}{\numberline {44}Reinforcement Learning with Sequence Models}{69}{chapter.44}%
-\contentsline {section}{\numberline {44.1}section title}{69}{section.44.1}%
-\contentsline {chapter}{\numberline {45}Meta-Learning and Transfer Learning}{70}{chapter.45}%
-\contentsline {section}{\numberline {45.1}section title}{70}{section.45.1}%
-\contentsline {chapter}{\numberline {46}Challenges and Open Problems}{71}{chapter.46}%
-\contentsline {section}{\numberline {46.1}section title}{71}{section.46.1}%
-\contentsline {chapter}{\numberline {47}Guest Lecture: Reinforcement Learning from Human Feedback}{72}{chapter.47}%
-\contentsline {section}{\numberline {47.1}Reinforcement Learning from Human Feedback}{72}{section.47.1}%
-\contentsline {section}{\numberline {47.2}Direct Preference Optimization}{73}{section.47.2}%
-\contentsline {part}{III\hspace {1em}COMPSCI 294-158: Deep Unsupervised Learning}{74}{part.3}%
-\contentsline {chapter}{\numberline {48}Introduction to Deep Unsupervised Learning}{75}{chapter.48}%
-\contentsline {section}{\numberline {48.1}Introduction to the Subject}{75}{section.48.1}%
-\contentsline {chapter}{\numberline {49}Autoregressive Models}{76}{chapter.49}%
-\contentsline {section}{\numberline {49.1}1-Dimensional Distributions}{76}{section.49.1}%
-\contentsline {section}{\numberline {49.2}High-Dimensional Distributions}{77}{section.49.2}%
-\contentsline {section}{\numberline {49.3}Deeper Dive into Causal Masked Neural Models}{78}{section.49.3}%
-\contentsline {subsection}{\numberline {49.3.1}Convolutional}{78}{subsection.49.3.1}%
-\contentsline {subsection}{\numberline {49.3.2}Attention}{78}{subsection.49.3.2}%
-\contentsline {subsection}{\numberline {49.3.3}Tokenization}{79}{subsection.49.3.3}%
-\contentsline {subsection}{\numberline {49.3.4}Caching}{79}{subsection.49.3.4}%
-\contentsline {section}{\numberline {49.4}Other Miscellaneous Topics}{79}{section.49.4}%
-\contentsline {subsection}{\numberline {49.4.1}Decoder-only vs. Encoder-Decoder Models}{79}{subsection.49.4.1}%
-\contentsline {chapter}{\numberline {50}Flow Models}{80}{chapter.50}%
-\contentsline {section}{\numberline {50.1}Foundations of Flows}{80}{section.50.1}%
-\contentsline {section}{\numberline {50.2}2-Dimensional Flows}{81}{section.50.2}%
-\contentsline {section}{\numberline {50.3}n-Dimensional Flows}{81}{section.50.3}%
-\contentsline {subsection}{\numberline {50.3.1}Autoregressive Flows}{81}{subsection.50.3.1}%
-\contentsline {subsection}{\numberline {50.3.2}RealNVP-like Architectures}{82}{subsection.50.3.2}%
-\contentsline {subsection}{\numberline {50.3.3}Brief Introduction of Glow, Flow++, FFJORD}{82}{subsection.50.3.3}%
-\contentsline {section}{\numberline {50.4}Dequantization}{82}{section.50.4}%
-\contentsline {chapter}{\numberline {51}Latent Variable Models}{84}{chapter.51}%
-\contentsline {section}{\numberline {51.1}section title}{84}{section.51.1}%
-\contentsline {chapter}{\numberline {52}GAN and Implicit Models}{85}{chapter.52}%
-\contentsline {section}{\numberline {52.1}section title}{85}{section.52.1}%
-\contentsline {chapter}{\numberline {53}Diffusion Models}{86}{chapter.53}%
-\contentsline {section}{\numberline {53.1}section title}{86}{section.53.1}%
-\contentsline {chapter}{\numberline {54}Self-Supervised Learning, Non-Generative Representation Learning}{87}{chapter.54}%
-\contentsline {section}{\numberline {54.1}section title}{87}{section.54.1}%
-\contentsline {chapter}{\numberline {55}Leage Language Models}{88}{chapter.55}%
-\contentsline {section}{\numberline {55.1}section title}{88}{section.55.1}%
-\contentsline {chapter}{\numberline {56}Video Generation}{89}{chapter.56}%
-\contentsline {section}{\numberline {56.1}section title}{89}{section.56.1}%
-\contentsline {chapter}{\numberline {57}Semi-Supervised Learning and Unsupervised Distribution Alignment}{90}{chapter.57}%
-\contentsline {section}{\numberline {57.1}section title}{90}{section.57.1}%
-\contentsline {chapter}{\numberline {58}Compression}{91}{chapter.58}%
-\contentsline {section}{\numberline {58.1}section title}{91}{section.58.1}%
-\contentsline {chapter}{\numberline {59}Multimodal Models}{92}{chapter.59}%
-\contentsline {section}{\numberline {59.1}section title}{92}{section.59.1}%
-\contentsline {chapter}{\numberline {60}Parallelization}{93}{chapter.60}%
-\contentsline {section}{\numberline {60.1}section title}{93}{section.60.1}%
-\contentsline {chapter}{\numberline {61}AI for Science (Gues Instructor)}{94}{chapter.61}%
-\contentsline {section}{\numberline {61.1}section title}{94}{section.61.1}%
-\contentsline {chapter}{\numberline {62}Neural Radiance Fields (Guest Instructor)}{95}{chapter.62}%
-\contentsline {section}{\numberline {62.1}section title}{95}{section.62.1}%
-\contentsline {part}{IV\hspace {1em}Mu Li's Videos on YouTube}{96}{part.4}%
-\contentsline {chapter}{\numberline {63}Note Name}{97}{chapter.63}%
-\contentsline {section}{\numberline {63.1}section title}{97}{section.63.1}%
+\contentsline {section}{\numberline {43.1}Inverse Reinforcement Learning Problem}{68}{section.43.1}%
+\contentsline {subsection}{\numberline {43.1.1}Forward vs. Inverse}{69}{subsection.43.1.1}%
+\contentsline {subsection}{\numberline {43.1.2}Feature Matching IRL}{69}{subsection.43.1.2}%
+\contentsline {section}{\numberline {43.2}Learning Reward Functions}{69}{section.43.2}%
+\contentsline {section}{\numberline {43.3}Approximated IRL in High Dimensions}{70}{section.43.3}%
+\contentsline {subsection}{\numberline {43.3.1}Unknown Dynamics and Large State/Action Spaces}{70}{subsection.43.3.1}%
+\contentsline {section}{\numberline {43.4}IRLs and GANs}{70}{section.43.4}%
+\contentsline {chapter}{\numberline {44}Reinforcement Learning with Sequence Models}{72}{chapter.44}%
+\contentsline {section}{\numberline {44.1}section title}{72}{section.44.1}%
+\contentsline {chapter}{\numberline {45}Meta-Learning and Transfer Learning}{73}{chapter.45}%
+\contentsline {section}{\numberline {45.1}section title}{73}{section.45.1}%
+\contentsline {chapter}{\numberline {46}Challenges and Open Problems}{74}{chapter.46}%
+\contentsline {section}{\numberline {46.1}section title}{74}{section.46.1}%
+\contentsline {chapter}{\numberline {47}Guest Lecture: Reinforcement Learning from Human Feedback}{75}{chapter.47}%
+\contentsline {section}{\numberline {47.1}Reinforcement Learning from Human Feedback}{75}{section.47.1}%
+\contentsline {section}{\numberline {47.2}Direct Preference Optimization}{76}{section.47.2}%
+\contentsline {part}{III\hspace {1em}COMPSCI 294-158: Deep Unsupervised Learning}{77}{part.3}%
+\contentsline {chapter}{\numberline {48}Introduction to Deep Unsupervised Learning}{78}{chapter.48}%
+\contentsline {section}{\numberline {48.1}Introduction to the Subject}{78}{section.48.1}%
+\contentsline {chapter}{\numberline {49}Autoregressive Models}{79}{chapter.49}%
+\contentsline {section}{\numberline {49.1}1-Dimensional Distributions}{79}{section.49.1}%
+\contentsline {section}{\numberline {49.2}High-Dimensional Distributions}{80}{section.49.2}%
+\contentsline {section}{\numberline {49.3}Deeper Dive into Causal Masked Neural Models}{81}{section.49.3}%
+\contentsline {subsection}{\numberline {49.3.1}Convolutional}{81}{subsection.49.3.1}%
+\contentsline {subsection}{\numberline {49.3.2}Attention}{81}{subsection.49.3.2}%
+\contentsline {subsection}{\numberline {49.3.3}Tokenization}{82}{subsection.49.3.3}%
+\contentsline {subsection}{\numberline {49.3.4}Caching}{82}{subsection.49.3.4}%
+\contentsline {section}{\numberline {49.4}Other Miscellaneous Topics}{82}{section.49.4}%
+\contentsline {subsection}{\numberline {49.4.1}Decoder-only vs. Encoder-Decoder Models}{82}{subsection.49.4.1}%
+\contentsline {chapter}{\numberline {50}Flow Models}{83}{chapter.50}%
+\contentsline {section}{\numberline {50.1}Foundations of Flows}{83}{section.50.1}%
+\contentsline {section}{\numberline {50.2}2-Dimensional Flows}{84}{section.50.2}%
+\contentsline {section}{\numberline {50.3}n-Dimensional Flows}{84}{section.50.3}%
+\contentsline {subsection}{\numberline {50.3.1}Autoregressive Flows}{84}{subsection.50.3.1}%
+\contentsline {subsection}{\numberline {50.3.2}RealNVP-like Architectures}{85}{subsection.50.3.2}%
+\contentsline {subsection}{\numberline {50.3.3}Brief Introduction of Glow, Flow++, FFJORD}{85}{subsection.50.3.3}%
+\contentsline {section}{\numberline {50.4}Dequantization}{85}{section.50.4}%
+\contentsline {chapter}{\numberline {51}Latent Variable Models}{87}{chapter.51}%
+\contentsline {section}{\numberline {51.1}section title}{87}{section.51.1}%
+\contentsline {chapter}{\numberline {52}GAN and Implicit Models}{88}{chapter.52}%
+\contentsline {section}{\numberline {52.1}section title}{88}{section.52.1}%
+\contentsline {chapter}{\numberline {53}Diffusion Models}{89}{chapter.53}%
+\contentsline {section}{\numberline {53.1}section title}{89}{section.53.1}%
+\contentsline {chapter}{\numberline {54}Self-Supervised Learning, Non-Generative Representation Learning}{90}{chapter.54}%
+\contentsline {section}{\numberline {54.1}section title}{90}{section.54.1}%
+\contentsline {chapter}{\numberline {55}Leage Language Models}{91}{chapter.55}%
+\contentsline {section}{\numberline {55.1}section title}{91}{section.55.1}%
+\contentsline {chapter}{\numberline {56}Video Generation}{92}{chapter.56}%
+\contentsline {section}{\numberline {56.1}section title}{92}{section.56.1}%
+\contentsline {chapter}{\numberline {57}Semi-Supervised Learning and Unsupervised Distribution Alignment}{93}{chapter.57}%
+\contentsline {section}{\numberline {57.1}section title}{93}{section.57.1}%
+\contentsline {chapter}{\numberline {58}Compression}{94}{chapter.58}%
+\contentsline {section}{\numberline {58.1}section title}{94}{section.58.1}%
+\contentsline {chapter}{\numberline {59}Multimodal Models}{95}{chapter.59}%
+\contentsline {section}{\numberline {59.1}section title}{95}{section.59.1}%
+\contentsline {chapter}{\numberline {60}Parallelization}{96}{chapter.60}%
+\contentsline {section}{\numberline {60.1}section title}{96}{section.60.1}%
+\contentsline {chapter}{\numberline {61}AI for Science (Gues Instructor)}{97}{chapter.61}%
+\contentsline {section}{\numberline {61.1}section title}{97}{section.61.1}%
+\contentsline {chapter}{\numberline {62}Neural Radiance Fields (Guest Instructor)}{98}{chapter.62}%
+\contentsline {section}{\numberline {62.1}section title}{98}{section.62.1}%
+\contentsline {part}{IV\hspace {1em}Mu Li's Videos on YouTube}{99}{part.4}%
+\contentsline {chapter}{\numberline {63}Note Name}{100}{chapter.63}%
+\contentsline {section}{\numberline {63.1}section title}{100}{section.63.1}%
